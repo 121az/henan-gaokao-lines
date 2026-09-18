@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>豫录线 · 河南高考历年录取分数线查询</title>
+<meta name="description" content="河南高考历年省控线（2016–2026）与 174 所高校在豫录取分数线、位次查询。支持科类切换、分数排序，手机与电脑均可使用。">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="">
+<link rel="icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090a0d'/%3E%3Ctext x='16' y='22' font-size='15' text-anchor='middle' fill='%23e8b04a' font-family='sans-serif'%3E%E8%B1%AB%3C/text%3E%3C/svg%3E">
+<style>
+/* ══ 1 · seeds — the only place raw values live ══ */
+:root{
+  --seed-bg:#090a0d;
+  --seed-surface:#101216;
+  --seed-fg:#f2f3f5;
+  --seed-primary:#e8b04a;
+  --seed-accent:#7dd3fc;
+  --seed-danger:#e5484d;
+  --seed-shadow:#000000;
+  --seed-radius:8px;
+  --seed-density:1;
+  --seed-border-alpha:10%;
+  --seed-line-w:2px;
+}
+/* ══ 2 · primitive ══ */
+:root{
+  --primitive-color-bg:var(--seed-bg);
+  --primitive-color-surface:var(--seed-surface);
+  --primitive-color-surface-elevated:color-mix(in oklab, var(--seed-surface) 94%, var(--seed-fg) 6%);
+  --primitive-color-fg:var(--seed-fg);
+  --primitive-color-fg-secondary:color-mix(in oklab, var(--seed-fg) 76%, var(--seed-bg) 24%);
+  --primitive-color-muted:color-mix(in oklab, var(--seed-fg) 60%, var(--seed-bg) 40%);
+  --primitive-color-border:color-mix(in oklab, var(--seed-fg) var(--seed-border-alpha), transparent);
+  --primitive-color-border-strong:color-mix(in oklab, var(--seed-fg) calc(var(--seed-border-alpha) * 1.8), transparent);
+  --primitive-color-primary:var(--seed-primary);
+  --primitive-color-primary-hover:color-mix(in oklab, var(--seed-primary) 84%, var(--seed-fg) 16%);
+  --primitive-color-primary-press:color-mix(in oklab, var(--seed-primary) 84%, var(--seed-bg) 16%);
+  --primitive-color-primary-soft:color-mix(in oklab, var(--seed-primary) 15%, transparent);
+  --primitive-color-accent:var(--seed-accent);
+  --primitive-color-accent-soft:color-mix(in oklab, var(--seed-accent) 15%, transparent);
+  --primitive-color-on-primary:var(--seed-bg);
+  --primitive-color-danger:var(--seed-danger);
+  --primitive-color-danger-soft:color-mix(in oklab, var(--seed-danger) 15%, transparent);
+  --primitive-color-shadow:var(--seed-shadow);
+  --primitive-space-1:4px;
+  --primitive-space-2:8px;
+  --primitive-space-3:12px;
+  --primitive-space-4:16px;
+  --primitive-space-5:20px;
+  --primitive-space-6:24px;
+  --primitive-space-7:28px;
+  --primitive-space-8:32px;
+  --primitive-space-9:36px;
+  --primitive-space-10:40px;
+  --primitive-space-11:44px;
+  --primitive-space-12:48px;
+  --primitive-space-13:52px;
+  --primitive-space-14:56px;
+  --primitive-space-15:60px;
+  --primitive-space-16:64px;
+  --primitive-radius-sm:calc(var(--seed-radius) * 0.5);
+  --primitive-radius-md:var(--seed-radius);
+  --primitive-radius-lg:calc(var(--seed-radius) * 1.5);
+  --primitive-radius-full:9999px;
+  --primitive-duration-fast:150ms;
+  --primitive-duration-normal:220ms;
+}
+/* ══ 3 · semantic ══ */
+:root{
+  --color-bg:var(--primitive-color-bg);
+  --color-surface:var(--primitive-color-surface);
+  --color-surface-elevated:var(--primitive-color-surface-elevated);
+  --color-fg:var(--primitive-color-fg);
+  --color-fg-secondary:var(--primitive-color-fg-secondary);
+  --color-muted:var(--primitive-color-muted);
+  --color-border:var(--primitive-color-border);
+  --color-border-strong:var(--primitive-color-border-strong);
+  --color-accent:var(--primitive-color-primary);
+  --color-accent-hover:var(--primitive-color-primary-hover);
+  --color-accent-press:var(--primitive-color-primary-press);
+  --color-accent-soft:var(--primitive-color-primary-soft);
+  --color-on-accent:var(--primitive-color-on-primary);
+  --color-data-2:var(--primitive-color-accent);
+  --color-data-2-soft:var(--primitive-color-accent-soft);
+  --color-danger:var(--primitive-color-danger);
+  --color-danger-soft:var(--primitive-color-danger-soft);
+  --color-ring:var(--primitive-color-primary);
+  --font-display:'Segoe UI', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans CJK SC', system-ui, sans-serif;
+  --font-body:'Segoe UI', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans CJK SC', system-ui, sans-serif;
+  --font-mono:ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --text-xs:12px;
+  --text-sm:13px;
+  --text-base:15px;
+  --text-md:17px;
+  --text-lg:20px;
+  --text-xl:24px;
+  --text-2xl:clamp(26px, 3.2vw, 33px);
+  --text-display:clamp(38px, 6vw, 56px);
+  --leading-tight:1.12;
+  --leading-normal:1.55;
+  --spacing-xs:var(--primitive-space-1);
+  --spacing-sm:var(--primitive-space-2);
+  --spacing-md:var(--primitive-space-4);
+  --spacing-lg:var(--primitive-space-6);
+  --spacing-xl:var(--primitive-space-10);
+  --spacing-2xl:var(--primitive-space-16);
+  --radius-sm:var(--primitive-radius-sm);
+  --radius-md:var(--primitive-radius-md);
+  --radius-lg:var(--primitive-radius-lg);
+  --radius-full:var(--primitive-radius-full);
+  --duration-fast:var(--primitive-duration-fast);
+  --duration-normal:var(--primitive-duration-normal);
+  --shadow-sm:0 1px 2px color-mix(in oklab, var(--primitive-color-shadow) 35%, transparent);
+  --shadow-md:0 14px 34px color-mix(in oklab, var(--primitive-color-shadow) 50%, transparent), 0 2px 6px color-mix(in oklab, var(--primitive-color-shadow) 32%, transparent);
+  --container-max:1120px;
+  --gutter:clamp(16px, 4vw, 32px);
+}
+/* ══ 4 · component ══ */
+:root{
+  --button-bg:var(--color-accent);
+  --button-fg:var(--color-on-accent);
+  --button-border:transparent;
+  --button-bg-hover:color-mix(in oklab, var(--button-bg) 88%, var(--color-fg) 12%);
+  --button-bg-active:var(--color-accent-press);
+  --button-padding-x:var(--spacing-lg);
+  --button-padding-y:calc(10px * var(--seed-density));
+  --button-radius:var(--radius-md);
+  --card-bg:color-mix(in oklab, var(--color-surface) 86%, transparent);
+  --card-border:var(--color-border);
+  --card-radius:var(--radius-lg);
+  --card-padding:calc(var(--spacing-lg) * var(--seed-density));
+  --input-bg:color-mix(in oklab, var(--color-surface) 70%, transparent);
+  --input-fg:var(--color-fg);
+  --input-border:var(--color-border);
+  --input-border-focus:var(--color-accent);
+  --input-padding-x:var(--spacing-md);
+  --input-padding-y:calc(10px * var(--seed-density));
+  --input-radius:var(--radius-md);
+  --table-bg:color-mix(in oklab, var(--color-surface) 92%, var(--color-bg) 8%);
+  --table-head-bg:color-mix(in oklab, var(--table-bg) 86%, var(--color-fg) 14%);
+  --table-row-hover:color-mix(in oklab, var(--table-bg) 88%, var(--color-fg) 12%);
+}
+/* ══ base ══ */
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:dark;scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  margin:0;
+  background:var(--color-bg);
+  color:var(--color-fg);
+  font-family:var(--font-body);
+  font-size:var(--text-base);
+  line-height:var(--leading-normal);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--font-display);font-weight:650;margin:0;text-wrap:balance;letter-spacing:-0.01em}
+h1{font-size:var(--text-display);line-height:var(--leading-tight);letter-spacing:-0.02em}
+h2{font-size:var(--text-2xl)}
+h3{font-size:var(--text-md)}
+p{margin:0;text-wrap:pretty}
+a{color:var(--color-fg);text-decoration:none}
+button{font-family:inherit}
+::selection{background:var(--color-accent-soft);color:var(--color-fg)}
+img,svg{max-width:100%}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+[hidden]{display:none !important}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.skip-link{position:absolute;left:-9999px;top:auto;z-index:100}
+.skip-link:focus{left:16px;top:12px;background:var(--color-accent);color:var(--color-on-accent);padding:10px 16px;border-radius:var(--radius-md);font-weight:600}
+.container{width:100%;max-width:var(--container-max);margin-inline:auto;padding-inline:var(--gutter)}
+.narrow{max-width:820px}
+/* ══ topnav ══ */
+.topnav{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab, var(--color-bg) 78%, transparent);
+  backdrop-filter:blur(12px) saturate(1.1);
+  -webkit-backdrop-filter:blur(12px) saturate(1.1);
+  border-bottom:1px solid var(--color-border);
+}
+.topnav-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-md);height:60px}
+.brand{display:flex;align-items:baseline;gap:8px;font-family:var(--font-display);font-weight:700;font-size:var(--text-md);letter-spacing:0.01em;color:var(--color-fg)}
+.brand-sub{font-family:var(--font-mono);font-size:10.5px;font-weight:400;color:var(--color-muted);letter-spacing:0.06em}
+.navlinks{display:flex;gap:2px}
+.navlinks a{color:var(--color-fg-secondary);font-size:var(--text-sm);padding:8px 12px;border-radius:var(--radius-md);transition:color var(--duration-fast) ease, background var(--duration-fast) ease}
+.navlinks a:hover{color:var(--color-fg);background:color-mix(in oklab, var(--color-fg) 6%, transparent)}
+/* ══ hero ══ */
+.hero{padding-block:clamp(44px, 8vw, 92px) clamp(40px, 6vw, 72px);border-bottom:1px solid var(--color-border)}
+.hero-grid{display:grid;grid-template-columns:minmax(0, 1.12fr) minmax(0, 0.88fr);gap:clamp(28px, 5vw, 64px);align-items:center}
+.eyebrow{font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;color:var(--color-muted)}
+.hero-copy h1{margin-top:var(--spacing-md)}
+.lead{font-size:var(--text-md);color:var(--color-fg-secondary);max-width:60ch;margin-top:var(--spacing-lg)}
+.hero-actions{display:flex;align-items:center;gap:var(--spacing-md);flex-wrap:wrap;margin-top:var(--spacing-xl)}
+.hero-meta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-muted);margin-top:var(--spacing-lg);letter-spacing:0.01em}
+/* buttons & links */
+.ds-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--spacing-sm);
+  padding:var(--button-padding-y) var(--button-padding-x);
+  background:var(--button-bg);color:var(--button-fg);
+  border:1px solid var(--button-border);border-radius:var(--button-radius);
+  font-family:var(--font-body);font-size:var(--text-base);font-weight:600;line-height:1.2;
+  cursor:pointer;
+  transition:background var(--duration-fast) ease, border-color var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+.ds-button:hover{background:var(--button-bg-hover)}
+.ds-button:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px}
+.ds-button:active{transform:translateY(1px);background:var(--button-bg-active)}
+.ds-button:disabled{opacity:0.5;cursor:not-allowed}
+.link-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:none;border:0;padding:10px 2px;margin:0;
+  color:var(--color-fg-secondary);font-size:var(--text-base);cursor:pointer;
+  border-bottom:1px solid var(--color-border-strong);
+  transition:color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+}
+.link-btn:hover{color:var(--color-fg);border-color:var(--color-fg)}
+.link-btn:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px}
+.link-btn.small{font-size:var(--text-sm);padding:6px 2px}
+/* cards & inputs */
+.ds-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--card-radius);padding:var(--card-padding);
+}
+.ds-input{
+  width:100%;padding:var(--input-padding-y) var(--input-padding-x);
+  background:var(--input-bg);color:var(--input-fg);
+  border:1px solid var(--input-border);border-radius:var(--input-radius);
+  font-family:var(--font-body);font-size:var(--text-base);
+  transition:border-color var(--duration-fast) ease;
+}
+.ds-input::placeholder{color:var(--color-muted)}
+.ds-input:hover{border-color:var(--color-border-strong)}
+.ds-input:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;border-color:var(--input-border-focus)}
+.ds-input:disabled{opacity:0.55;cursor:not-allowed}
+/* segmented control */
+.seg{display:inline-flex;gap:3px;padding:3px;background:color-mix(in oklab, var(--color-fg) 5%, transparent);border:1px solid var(--color-border);border-radius:var(--radius-full)}
+.seg-btn{
+  border:0;background:transparent;color:var(--color-fg-secondary);
+  font-size:var(--text-sm);font-weight:550;line-height:1.3;
+  padding:8px 15px;min-height:36px;border-radius:var(--radius-full);cursor:pointer;
+  transition:background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+.seg-btn:hover{color:var(--color-fg)}
+.seg-btn:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px}
+.seg-btn.is-active{background:var(--color-accent);color:var(--color-on-accent);font-weight:600}
+/* quick query */
+.quick{display:flex;flex-direction:column;gap:var(--spacing-md)}
+.quick-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--spacing-sm)}
+.quick-title{font-size:var(--text-md)}
+.quick-badge{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-fg-secondary);border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:3px 10px;white-space:nowrap}
+.quick-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
+.field-label{font-size:var(--text-sm);color:var(--color-fg-secondary)}
+.select-wrap{position:relative;flex:1;min-width:132px}
+.select-wrap::after{content:"";position:absolute;right:14px;top:50%;width:7px;height:7px;border-right:2px solid var(--color-muted);border-bottom:2px solid var(--color-muted);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.select{appearance:none;-webkit-appearance:none;padding-right:36px;cursor:pointer}
+#seg-quick{width:100%}
+#seg-quick .seg-btn{flex:1}
+.quick-stats{margin:0;display:flex;flex-direction:column}
+.qstat{display:flex;align-items:baseline;justify-content:space-between;gap:var(--spacing-md);padding:11px 0}
+.qstat + .qstat{border-top:1px solid var(--color-border)}
+.qstat dt{font-size:var(--text-sm);color:var(--color-fg-secondary)}
+.qstat dd{margin:0;display:flex;align-items:baseline;gap:10px}
+.qval{font-size:var(--text-xl);font-weight:650;letter-spacing:-0.01em}
+.qdelta{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-muted);white-space:nowrap}
+.quick-note{font-size:var(--text-xs);color:var(--color-muted);line-height:1.7}
+/* ══ sections ══ */
+.section{padding-block:clamp(52px, 8vw, 88px);border-bottom:1px solid var(--color-border)}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--spacing-lg);flex-wrap:wrap;margin-bottom:var(--spacing-xl)}
+.section-sub{color:var(--color-fg-secondary);font-size:var(--text-base);margin-top:var(--spacing-sm);max-width:58ch}
+.table-title{margin:var(--spacing-xl) 0 var(--spacing-md);color:var(--color-fg)}
+.footnote{margin-top:var(--spacing-md);font-size:var(--text-xs);color:var(--color-muted);line-height:1.8;max-width:92ch}
+/* ══ chart ══ */
+.chart-card{margin-top:0}
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-md);flex-wrap:wrap;margin-bottom:var(--spacing-md)}
+.legend{display:flex;gap:var(--spacing-lg);flex-wrap:wrap}
+.legend-item{display:inline-flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--color-fg-secondary)}
+.legend-swatch{display:inline-block;width:22px;height:0;border-top:3px solid}
+.l1{border-color:var(--color-accent)}
+.l2{border-color:var(--color-data-2);border-top-style:dashed}
+.chart-hint{font-size:var(--text-xs);color:var(--color-muted);font-family:var(--font-mono)}
+.chart-wrap{width:100%}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.grid-line{stroke:var(--color-border);stroke-width:1}
+.axis-x,.axis-y{fill:var(--color-muted);font-family:var(--font-mono);font-size:11px}
+.chart-line{fill:none;stroke-width:var(--seed-line-w);stroke-linecap:round;stroke-linejoin:round}
+.series-1{stroke:var(--color-accent)}
+.series-2{stroke:var(--color-data-2);stroke-dasharray:7 6}
+.dot-1{fill:var(--color-accent)}
+.dot-2{fill:var(--color-data-2)}
+.end-label{font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:-0.01em}
+.end-1{fill:var(--color-accent)}
+.end-2{fill:var(--color-data-2)}
+.era-line{stroke:var(--color-border-strong);stroke-width:1;stroke-dasharray:3 4}
+.era-label{fill:var(--color-muted);font-size:10.5px;font-family:var(--font-body)}
+.hover-line{stroke:var(--color-border-strong);stroke-width:1}
+.hover-dot{fill:var(--color-bg);stroke-width:2}
+.hover-dot.d1{stroke:var(--color-accent)}
+.hover-dot.d2{stroke:var(--color-data-2)}
+.tip-bg{fill:var(--color-surface-elevated);stroke:var(--color-border-strong);stroke-width:1}
+.tip-head{fill:var(--color-fg);font-family:var(--font-body);font-size:12px;font-weight:600}
+.tip-rule{stroke:var(--color-border);stroke-width:1}
+.tip-row{font-family:var(--font-mono);font-size:11.5px}
+.tip-k{fill:var(--color-fg-secondary)}
+.tip-v.v1{fill:var(--color-accent)}
+.tip-v.v2{fill:var(--color-data-2)}
+.chart-cap{margin-top:var(--spacing-md);font-size:var(--text-xs);color:var(--color-muted);line-height:1.7}
+/* ══ tables ══ */
+.table-card{padding:0;background:var(--table-bg);overflow:hidden}
+.table-scroll{overflow:auto;-webkit-overflow-scrolling:touch}
+.table-scroll-tall{max-height:min(70vh, 640px)}
+.table-scroll::-webkit-scrollbar{width:10px;height:10px}
+.table-scroll::-webkit-scrollbar-track{background:transparent}
+.table-scroll::-webkit-scrollbar-thumb{background:color-mix(in oklab, var(--color-fg) 17%, transparent);border-radius:6px;border:2px solid transparent;background-clip:padding-box}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--text-sm)}
+.data-table th,.data-table td{padding:11px 14px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--color-border);vertical-align:top}
+.data-table thead th{background:var(--table-head-bg);color:var(--color-fg-secondary);font-weight:550;font-size:var(--text-xs);letter-spacing:0.02em}
+.data-table tbody tr:last-child td,.data-table tbody tr:last-child th{border-bottom:0}
+.data-table .num-col{text-align:right}
+.data-table td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.data-table td.rank{color:var(--color-fg-secondary)}
+.data-table tbody tr:hover td,.data-table tbody tr:hover th.row-year{background:var(--table-row-hover)}
+.row-year{font-family:var(--font-mono);color:var(--color-fg-secondary);font-weight:550}
+.group-h{text-align:center}
+.wrap-th{white-space:normal;line-height:1.45;min-width:84px}
+.na{color:var(--color-muted)}
+/* schools explorer */
+.controls{display:flex;align-items:center;gap:var(--spacing-sm);flex-wrap:wrap;margin-bottom:var(--spacing-md)}
+.search{flex:1 1 240px;width:auto;min-width:200px}
+.table-meta{display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-md);padding:12px 16px;border-top:1px solid var(--color-border);font-size:var(--text-sm);color:var(--color-fg-secondary);flex-wrap:wrap}
+.meta-right{display:flex;align-items:center;gap:var(--spacing-md);flex-wrap:wrap}
+.track-chip{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-muted)}
+#univ-table{min-width:660px}
+#univ-table thead th{position:sticky;top:0;z-index:2;background:var(--table-head-bg)}
+#univ-table th:first-child,#univ-table td:first-child{position:sticky;left:0;z-index:1;background:var(--table-bg)}
+#univ-table thead th:first-child{z-index:3}
+#univ-table tbody tr:hover td:first-child{background:var(--table-row-hover)}
+.cell-name{white-space:normal;min-width:148px}
+.u-name{font-weight:550}
+.u-code{margin-left:7px;font-family:var(--font-mono);font-size:10.5px;color:var(--color-muted)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.tag{font-size:10.5px;font-weight:550;letter-spacing:0.02em;padding:2px 7px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);color:var(--color-fg-secondary);white-space:nowrap}
+.sort-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:4px 0;margin:0;color:inherit;font:inherit;font-size:var(--text-xs);letter-spacing:0.02em;font-weight:550;cursor:pointer}
+.sort-btn:hover{color:var(--color-fg)}
+.sort-btn:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px}
+.sort-btn .mark{font-family:var(--font-mono);font-size:10px;color:var(--color-muted)}
+th[aria-sort="ascending"] .sort-btn,th[aria-sort="descending"] .sort-btn{color:var(--color-fg)}
+.empty-row td{white-space:normal;color:var(--color-muted);padding:28px 16px;text-align:center}
+/* ══ faq ══ */
+.faq-list{margin-top:var(--spacing-md)}
+.faq-list details{border-bottom:1px solid var(--color-border)}
+.faq-list details:first-child{border-top:1px solid var(--color-border)}
+.faq-list summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px;
+  padding:16px 2px;font-weight:550;font-size:var(--text-md);
+  transition:color var(--duration-fast) ease;
+}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary::before{content:"+";font-family:var(--font-mono);font-size:var(--text-md);color:var(--color-muted);width:1em;flex:none;text-align:center}
+.faq-list details[open] summary::before{content:"−"}
+.faq-list summary:hover{color:var(--color-fg)}
+.faq-list summary:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px}
+.faq-list details p{margin:0 0 18px;color:var(--color-fg-secondary);line-height:1.75;max-width:66ch;padding-left:calc(1em + 12px)}
+/* ══ footer ══ */
+.pagefoot{padding:var(--spacing-xl) 0 var(--spacing-lg);color:var(--color-muted);font-size:var(--text-sm)}
+.foot-grid{display:flex;justify-content:space-between;gap:var(--spacing-xl);flex-wrap:wrap;margin-bottom:var(--spacing-lg)}
+.foot-brand{font-family:var(--font-display);font-weight:700;font-size:var(--text-md);color:var(--color-fg)}
+.foot-note{max-width:58ch;line-height:1.75;margin-top:var(--spacing-sm)}
+.foot-links{display:flex;gap:var(--spacing-md);align-items:flex-start}
+.foot-links a{color:var(--color-fg-secondary);padding:4px 0}
+.foot-links a:hover{color:var(--color-fg)}
+.foot-copy{border-top:1px solid var(--color-border);padding-top:var(--spacing-md);font-size:var(--text-xs);font-family:var(--font-mono);letter-spacing:0.01em}
+/* ══ responsive ══ */
+@media (max-width:920px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero{padding-block:clamp(36px, 8vw, 64px) clamp(32px, 7vw, 56px)}
+  .section{padding-block:clamp(44px, 7vw, 64px)}
+  .section-head{align-items:flex-start}
+}
+@media (max-width:640px){
+  h1{font-size:clamp(30px, 9.5vw, 40px)}
+  .brand-sub{display:none}
+  .navlinks a{padding:7px 9px;font-size:var(--text-xs)}
+  .data-table th,.data-table td{padding:9px 10px}
+  .cell-name{min-width:120px}
+  .chart-hint{display:none}
+  .table-meta{flex-direction:column;align-items:flex-start;gap:8px}
+  .meta-right{width:100%;justify-content:space-between}
+  .foot-grid{flex-direction:column;gap:var(--spacing-lg)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="topnav" data-component="TopNav" data-od-id="topnav">
+  <div class="container topnav-inner">
+    <a class="brand" href="#main">豫录线<span class="brand-sub">河南高考数据</span></a>
+    <nav class="navlinks" aria-label="页面导航">
+      <a href="#lines">省控线</a>
+      <a href="#schools">院校线</a>
+      <a href="#faq">问答</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <noscript><p class="container" style="padding-block:16px;color:var(--color-fg-secondary)">本站的查询、排序与图表功能需要启用 JavaScript。</p></noscript>
+  <!-- hero -->
+  <section class="hero" id="hero" data-od-id="hero" data-component="Hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">河南高考数据 · 2016–2026</p>
+        <h1>河南高考历年录取线<br>一页查清</h1>
+        <p class="lead">省控线 11 年趋势与 174 所高校在豫录取分、位次（2021–2025）。按科类切换、按分数排序，手机电脑都能查。</p>
+        <div class="hero-actions">
+          <a class="ds-button" href="#lines">查省控线趋势</a>
+          <a class="link-btn" href="#schools">搜索高校录取线</a>
+        </div>
+        <p class="hero-meta">数据更新：2026-09 · 来源：河南省教育考试院及公开投档资料</p>
+      </div>
+      <aside class="ds-card quick" data-component="QuickQuery" aria-label="省控线速查">
+        <div class="quick-head">
+          <h2 class="quick-title">省控线速查</h2>
+          <span class="quick-badge" id="quick-badge">2026 · 物理类</span>
+        </div>
+        <div class="quick-controls">
+          <label class="field-label" for="quick-year">年份</label>
+          <span class="select-wrap">
+            <select id="quick-year" class="ds-input select">
+              <option value="2026" selected>2026 年</option>
+              <option value="2025">2025 年</option>
+              <option value="2024">2024 年</option>
+              <option value="2023">2023 年</option>
+              <option value="2022">2022 年</option>
+              <option value="2021">2021 年</option>
+              <option value="2020">2020 年</option>
+              <option value="2019">2019 年</option>
+              <option value="2018">2018 年</option>
+              <option value="2017">2017 年</option>
+              <option value="2016">2016 年</option>
+            </select>
+          </span>
+          <div class="seg" id="seg-quick" role="group" aria-label="科类切换">
+            <button type="button" class="seg-btn is-active" data-track="physics" aria-pressed="true">物理类</button>
+            <button type="button" class="seg-btn" data-track="history" aria-pressed="false">历史类</button>
+          </div>
+        </div>
+        <dl class="quick-stats" aria-live="polite">
+          <div class="qstat"><dt id="qk1">特殊类型线</dt><dd><span class="qval num" id="qv1">513</span><span class="qdelta" id="qd1">较上年 −22</span></dd></div>
+          <div class="qstat"><dt id="qk2">本科线</dt><dd><span class="qval num" id="qv2">419</span><span class="qdelta" id="qd2">较上年 −8</span></dd></div>
+          <div class="qstat"><dt id="qk3">专科线</dt><dd><span class="qval num" id="qv3">179</span><span class="qdelta" id="qd3">较上年 −6</span></dd></div>
+        </dl>
+        <p class="quick-note" id="quick-note">2025 年起河南实行新高考：本科一批、二批合并为本科批，此表显示特殊类型线与本科线。</p>
+      </aside>
+    </div>
+  </section>
+  <!-- lines -->
+  <section class="section" id="lines" data-od-id="lines" data-component="ProvinceLines">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>省控线趋势 · 2016–2026</h2>
+          <p class="section-sub">河南各科类各批次最低录取控制分数线。悬停或轻触图表查看逐年数值，完整数据见下方表格。</p>
+        </div>
+        <div class="seg" id="seg-chart" role="group" aria-label="科类切换">
+          <button type="button" class="seg-btn is-active" data-track="physics" aria-pressed="true">物理类</button>
+          <button type="button" class="seg-btn" data-track="history" aria-pressed="false">历史类</button>
+        </div>
+      </div>
+      <figure class="ds-card chart-card" data-component="TrendChart">
+        <div class="chart-head">
+          <div class="legend">
+            <span class="legend-item"><span class="legend-swatch l1"></span>本科一批 / 特殊类型线</span>
+            <span class="legend-item"><span class="legend-swatch l2"></span>本科二批 / 本科线</span>
+          </div>
+          <span class="chart-hint">悬停或轻触图表查看逐年数值</span>
+        </div>
+        <div class="chart-wrap" id="chart-wrap">
+          <svg id="chart" viewBox="0 0 1000 380" role="img" aria-label="河南省物理类本科一批与本科二批分数线 2016 至 2026 年趋势折线图，逐年数值见下方数据表"></svg>
+        </div>
+        <figcaption class="chart-cap">实线为本科一批 / 特殊类型招生控制线，虚线为本科二批 / 本科线；2025 年起为本省新高考口径（本科一批、二批合并为本科批）。单位：分。</figcaption>
+      </figure>
+      <h3 class="table-title">逐年数据 · 全部批次</h3>
+      <div class="ds-card table-card" data-component="LinesTable">
+        <div class="table-scroll">
+          <table class="data-table" id="lines-table">
+            <caption class="visually-hidden">2016 至 2026 年河南省各批次最低录取控制分数线，含物理类与历史类</caption>
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2" class="row-year">年份</th>
+                <th scope="colgroup" colspan="3" class="group-h">物理类（原理科）</th>
+                <th scope="colgroup" colspan="3" class="group-h">历史类（原文科）</th>
+              </tr>
+              <tr>
+                <th scope="col" class="num-col wrap-th">本科一批 / 特招线</th>
+                <th scope="col" class="num-col wrap-th">本科二批 / 本科线</th>
+                <th scope="col" class="num-col wrap-th">专科线</th>
+                <th scope="col" class="num-col wrap-th">本科一批 / 特招线</th>
+                <th scope="col" class="num-col wrap-th">本科二批 / 本科线</th>
+                <th scope="col" class="num-col wrap-th">专科线</th>
+              </tr>
+            </thead>
+            <tbody id="lines-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="footnote">① 2016 年另有本科三批线（文科 393、理科 370），2017 年起本科二批与本科三批合并。② 2025 年起河南进入新高考：本科一批、二批合并为本科批，表中「本科一批 / 特招线」列对应特殊类型招生控制线。③ 省控线数据来源：河南省教育考试院历年公布。</p>
+    </div>
+  </section>
+  <!-- schools -->
+  <section class="section" id="schools" data-od-id="schools" data-component="SchoolsExplorer">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>高校在豫录取分数线</h2>
+          <p class="section-sub">收录 174 所高校 2021–2025 年在豫录取最低分与位次。输入关键词即时筛选，点击表头按任意列排序。</p>
+        </div>
+      </div>
+      <div class="controls">
+        <label class="visually-hidden" for="q">搜索院校名称或代号</label>
+        <input id="q" class="ds-input search" type="search" placeholder="搜索院校名称 / 代号，如：郑州大学" autocomplete="off">
+        <div class="seg" id="seg-schools" role="group" aria-label="科类切换">
+          <button type="button" class="seg-btn is-active" data-track="physics" aria-pressed="true">物理类</button>
+          <button type="button" class="seg-btn" data-track="history" aria-pressed="false">历史类</button>
+        </div>
+      </div>
+      <div class="ds-card table-card" data-component="SchoolsTable">
+        <div class="table-scroll table-scroll-tall">
+          <table class="data-table" id="univ-table">
+            <caption class="visually-hidden">高校 2021 至 2025 年在河南省录取最低分与位次，点击表头可排序</caption>
+            <thead>
+              <tr>
+                <th scope="col" data-key="n"><button type="button" class="sort-btn" data-sort="n">院校<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="m2025"><button type="button" class="sort-btn" data-sort="m2025">2025 最低分<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="r2025"><button type="button" class="sort-btn" data-sort="r2025">2025 位次<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="m2024"><button type="button" class="sort-btn" data-sort="m2024">2024 最低分<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="r2024"><button type="button" class="sort-btn" data-sort="r2024">2024 位次<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="m2023"><button type="button" class="sort-btn" data-sort="m2023">2023 最低分<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="m2022"><button type="button" class="sort-btn" data-sort="m2022">2022 最低分<span class="mark" aria-hidden="true"></span></button></th>
+                <th scope="col" class="num-col" data-key="m2021"><button type="button" class="sort-btn" data-sort="m2021">2021 最低分<span class="mark" aria-hidden="true"></span></button></th>
+              </tr>
+            </thead>
+            <tbody id="univ-body"></tbody>
+          </table>
+        </div>
+        <div class="table-meta">
+          <span id="univ-count" role="status" aria-live="polite">共 174 所院校</span>
+          <span class="meta-right">
+            <span class="track-chip" id="track-chip">科类：物理类（2021–2024 为理科数据）</span>
+            <button type="button" id="clear-filters" class="link-btn small" hidden>清空搜索</button>
+          </span>
+        </div>
+      </div>
+      <p class="footnote">位次由河南省对应科类一分一段表换算（自 2024 年起整理）；分数为各校本科一批 / 本科批普通类投档最低分，不含专项、提前批及中外合作单列。数据仅供参考，填报请以官方最新公布为准。</p>
+    </div>
+  </section>
+  <!-- faq -->
+  <section class="section" id="faq" data-od-id="faq" data-component="Faq">
+    <div class="container narrow">
+      <h2>常见问题</h2>
+      <div class="faq-list">
+        <details open>
+          <summary>省控线、投档线、录取线有什么区别？</summary>
+          <p>省控线是河南省统一划定的各批次最低录取控制分数线；投档线是高校调阅考生档案的最低分，通常不低于省控线；录取线是最终录取的最低分。本站「高校录取线」采用投档最低分口径，三者关系可记为：省控线 ≤ 投档线 ≈ 录取线。</p>
+        </details>
+        <details>
+          <summary>2025 年新高考后，和历史数据怎么对照？</summary>
+          <p>河南 2025 年起实行新高考，科类由文理科改为历史类 / 物理类，本科一批、二批合并为本科批，并设特殊类型招生控制线（作用近似原一本线）。趋势图与表格按「历史类≈原文科、物理类≈原理科」接续展示；2024 与 2025 年之间的跳变属于口径变化，参考时需注意。</p>
+        </details>
+        <details>
+          <summary>为什么只有 2024、2025 两年有位次？</summary>
+          <p>位次由一分一段表换算，本站自 2024 年起纳入整理；2021–2023 年的公开资料仅含分数，未提供位次。选校时位次通常比分数更稳定：分数随试题难度浮动，位次更能反映竞争位置。</p>
+        </details>
+        <details>
+          <summary>数据来源与更新频率？</summary>
+          <p>省控线来自河南省教育考试院历年公布数据；高校录取分与位次由公开投档资料整理。最近更新：2026-09，含 2026 年省控线与 2021–2025 年高校录取线，后续年份将持续补充。</p>
+        </details>
+        <details>
+          <summary>怎么用它做志愿参考？</summary>
+          <p>先定位自己的全省位次，再对照目标院校近两年的录取位次区间；参考分数时至少看三年趋势，并留意当年招生计划与专业组设置的变化。本页数据仅供参考，填报请以官方最新公布为准。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="pagefoot" data-component="PageFoot" data-od-id="pagefoot">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-brand">豫录线</p>
+        <p class="foot-note">个人整理的高考数据参考工具：省控线来源于河南省教育考试院历年公布，高校录取分为公开投档资料整理，仅供参考，填报志愿请以官方最新公布为准。</p>
+      </div>
+      <nav class="foot-links" aria-label="页脚导航">
+        <a href="#lines">省控线</a>
+        <a href="#schools">院校线</a>
+        <a href="#faq">常见问题</a>
+        <a href="#main">回到顶部</a>
+      </nav>
+    </div>
+    <p class="foot-copy">© 2026 豫录线 · 数据更新至 2026-09 · 单文件离线可用</p>
+  </div>
+</footer>
+<script>
+(function () {
+  'use strict';
+  var DATA = {"univ":[{"n":"北京航空航天大学","c":"10006","t":["985","211","双一流"],"y":{"2025":{"P":{"m":679,"r":1277},"H":{"m":647,"r":549}},"2024":{"L":{"m":669,"r":1318},"W":{"m":620,"r":690}},"2023":{"L":{"m":667,"r":null},"W":{"m":639,"r":null}},"2022":{"L":{"m":655,"r":null},"W":{"m":607,"r":null}},"2021":{"L":{"m":674,"r":null},"W":{"m":643,"r":null}}}},{"n":"北京理工大学","c":"10007","t":["985","211","双一流"],"y":{"2025":{"P":{"m":680,"r":1146},"H":{"m":640,"r":874}},"2024":{"L":{"m":668,"r":1410},"W":{"m":615,"r":916}},"2023":{"L":{"m":664,"r":null},"W":{"m":633,"r":null}},"2022":{"L":{"m":650,"r":null},"W":{"m":602,"r":null}},"2021":{"L":{"m":664,"r":null},"W":{"m":634,"r":null}}}},{"n":"清华大学","c":"10003","t":["985","211","双一流"],"y":{"2025":{"P":{"m":700,"r":108},"H":{"m":687,"r":null}},"2024":{"L":{"m":696,"r":94},"W":{"m":658,"r":36}},"2023":{"L":{"m":698,"r":null},"W":{"m":685,"r":null}},"2022":{"L":{"m":684,"r":null},"W":{"m":652,"r":null}},"2021":{"L":{"m":699,"r":null},"W":{"m":677,"r":null}}}},{"n":"中国人民大学","c":"10002","t":["985","211","双一流"],"y":{"2025":{"P":{"m":679,"r":1277},"H":{"m":664,"r":155}},"2024":{"L":{"m":655,"r":2955},"W":{"m":642,"r":170}},"2023":{"L":{"m":669,"r":null},"W":{"m":661,"r":null}},"2022":{"L":{"m":643,"r":null},"W":{"m":624,"r":null}},"2021":{"L":{"m":671,"r":null},"W":{"m":662,"r":null}}}},{"n":"北京大学","c":"10001","t":["985","211","双一流"],"y":{"2025":{"P":{"m":697,"r":186},"H":{"m":673,"r":61}},"2024":{"L":{"m":696,"r":94},"W":{"m":652,"r":76}},"2023":{"L":{"m":696,"r":null},"W":{"m":672,"r":null}},"2022":{"L":{"m":683,"r":null},"W":{"m":639,"r":null}},"2021":{"L":{"m":697,"r":null},"W":{"m":669,"r":null}}}},{"n":"南开大学","c":"10055","t":["985","211","双一流"],"y":{"2025":{"P":{"m":664,"r":3838},"H":{"m":645,"r":614}},"2024":{"L":{"m":651,"r":3608},"W":{"m":621,"r":652}},"2023":{"L":{"m":649,"r":null},"W":{"m":646,"r":null}},"2022":{"L":{"m":587,"r":null},"W":{"m":611,"r":null}},"2021":{"L":{"m":665,"r":null},"W":{"m":650,"r":null}}}},{"n":"中国农业大学","c":"10019","t":["985","211","双一流"],"y":{"2025":{"P":{"m":624,"r":23204},"H":{"m":615,"r":3337}},"2024":{"L":{"m":599,"r":24309},"W":{"m":601,"r":1902}},"2023":{"L":{"m":611,"r":null},"W":{"m":625,"r":null}},"2022":{"L":{"m":596,"r":null},"W":{"m":594,"r":null}},"2021":{"L":{"m":627,"r":null},"W":{"m":633,"r":null}}}},{"n":"天津大学","c":"10056","t":["985","211","双一流"],"y":{"2025":{"P":{"m":655,"r":6441},"H":{"m":636,"r":1112}},"2024":{"L":{"m":645,"r":4744},"W":{"m":612,"r":1108}},"2023":{"L":{"m":633,"r":null},"W":{"m":632,"r":null}},"2022":{"L":{"m":622,"r":null},"W":{"m":603,"r":null}},"2021":{"L":{"m":652,"r":null},"W":{"m":638,"r":null}}}},{"n":"中央民族大学","c":"10052","t":["985","211","双一流"],"y":{"2025":{"P":{"m":627,"r":20939},"H":{"m":623,"r":2268}},"2024":{"L":{"m":611,"r":16982},"W":{"m":595,"r":2503}},"2023":{"L":{"m":599,"r":null},"W":{"m":618,"r":null}},"2022":{"L":{"m":594,"r":null},"W":{"m":588,"r":null}},"2021":{"L":{"m":623,"r":null},"W":{"m":631,"r":null}}}},{"n":"北京师范大学","c":"10027","t":["985","211","双一流"],"y":{"2025":{"P":{"m":644,"r":10886},"H":{"m":627,"r":1833}},"2024":{"L":{"m":632,"r":8139},"W":{"m":618,"r":788}},"2023":{"L":{"m":638,"r":null},"W":{"m":645,"r":null}},"2022":{"L":{"m":626,"r":null},"W":{"m":613,"r":null}},"2021":{"L":{"m":636,"r":null},"W":{"m":647,"r":null}}}},{"n":"哈尔滨工业大学","c":"10213","t":["985","211","双一流"],"y":{"2025":{"P":{"m":682,"r":961},"H":{"m":637,"r":1047}},"2024":{"L":{"m":671,"r":1180}},"2023":{"L":{"m":659,"r":null},"W":{"m":626,"r":null}},"2022":{"L":{"m":637,"r":null},"W":{"m":569,"r":null}},"2021":{"L":{"m":656,"r":null},"W":{"m":631,"r":null}}}},{"n":"大连理工大学","c":"10141","t":["985","211","双一流"],"y":{"2025":{"P":{"m":657,"r":5758},"H":{"m":624,"r":2158}},"2024":{"L":{"m":641,"r":5635},"W":{"m":601,"r":1902}},"2023":{"L":{"m":629,"r":null},"W":{"m":615,"r":null}},"2022":{"L":{"m":610,"r":null},"W":{"m":589,"r":null}},"2021":{"L":{"m":633,"r":null}}}},{"n":"东北大学","c":"10145","t":["985","211","双一流"],"y":{"2025":{"P":{"m":611,"r":34569},"H":{"m":618,"r":2901}},"2024":{"L":{"m":622,"r":11767},"W":{"m":592,"r":2855}},"2023":{"L":{"m":614,"r":null},"W":{"m":611,"r":null}},"2022":{"L":{"m":591,"r":null},"W":{"m":584,"r":null}},"2021":{"L":{"m":628,"r":null},"W":{"m":625,"r":null}}}},{"n":"同济大学","c":"10247","t":["985","211","双一流"],"y":{"2025":{"P":{"m":662,"r":4316},"H":{"m":624,"r":2158}},"2024":{"L":{"m":653,"r":3287},"W":{"m":624,"r":539}},"2023":{"L":{"m":641,"r":null},"W":{"m":643,"r":null}},"2022":{"L":{"m":564,"r":null},"W":{"m":609,"r":null}},"2021":{"L":{"m":667,"r":null},"W":{"m":645,"r":null}}}},{"n":"复旦大学","c":"10246","t":["985","211","双一流"],"y":{"2025":{"P":{"m":690,"r":416},"H":{"m":666,"r":133}},"2024":{"L":{"m":692,"r":174},"W":{"m":646,"r":121}},"2023":{"L":{"m":681,"r":null},"W":{"m":665,"r":null}},"2022":{"L":{"m":668,"r":null},"W":{"m":633,"r":null}},"2021":{"L":{"m":691,"r":null},"W":{"m":663,"r":null}}}},{"n":"上海交通大学","c":"10248","t":["985","211","双一流"],"y":{"2025":{"P":{"m":691,"r":380},"H":{"m":669,"r":97}},"2024":{"L":{"m":693,"r":150},"W":{"m":652,"r":76}},"2023":{"L":{"m":691,"r":null},"W":{"m":668,"r":null}},"2022":{"L":{"m":678,"r":null},"W":{"m":637,"r":null}},"2021":{"L":{"m":692,"r":null},"W":{"m":667,"r":null}}}},{"n":"浙江大学","c":"10335","t":["985","211","双一流"],"y":{"2025":{"P":{"m":688,"r":511},"H":{"m":660,"r":210}},"2024":{"W":{"m":634,"r":302}},"2023":{"L":{"m":679,"r":null},"W":{"m":655,"r":null}},"2022":{"L":{"m":666,"r":null},"W":{"m":622,"r":null}},"2021":{"L":{"m":686,"r":null},"W":{"m":658,"r":null}}}},{"n":"东南大学","c":"10286","t":["985","211","双一流"],"y":{"2025":{"P":{"m":673,"r":2061},"H":{"m":641,"r":821}},"2024":{"L":{"m":661,"r":2157},"W":{"m":612,"r":1108}},"2023":{"L":{"m":653,"r":null},"W":{"m":636,"r":null}},"2022":{"L":{"m":633,"r":null},"W":{"m":605,"r":null}},"2021":{"L":{"m":651,"r":null},"W":{"m":640,"r":null}}}},{"n":"南京大学","c":"10284","t":["985","211","双一流"],"y":{"2025":{"P":{"m":683,"r":857},"H":{"m":662,"r":188}},"2024":{"L":{"m":675,"r":881},"W":{"m":636,"r":260}},"2023":{"L":{"m":673,"r":null},"W":{"m":658,"r":null}},"2022":{"L":{"m":657,"r":null},"W":{"m":626,"r":null}},"2021":{"L":{"m":677,"r":null},"W":{"m":659,"r":null}}}},{"n":"华东师范大学","c":"10269","t":["985","211","双一流"],"y":{"2025":{"P":{"m":652,"r":7511},"H":{"m":620,"r":2608}},"2024":{"L":{"m":637,"r":6669},"W":{"m":613,"r":1038}},"2023":{"L":{"m":625,"r":null},"W":{"m":635,"r":null}},"2022":{"L":{"m":579,"r":null},"W":{"m":605,"r":null}},"2021":{"L":{"m":650,"r":null},"W":{"m":643,"r":null}}}},{"n":"中国科学技术大学","c":"10358","t":["985","211","双一流"],"y":{"2025":{"P":{"m":683,"r":857}},"2023":{"L":{"m":676,"r":null}},"2022":{"L":{"m":660,"r":null}},"2021":{"L":{"m":679,"r":null}}}},{"n":"吉林大学","c":"10183","t":["985","211","双一流"],"y":{"2025":{"P":{"m":621,"r":25611},"H":{"m":625,"r":2032}},"2024":{"L":{"m":625,"r":10592},"W":{"m":597,"r":2288}},"2023":{"L":{"m":609,"r":null},"W":{"m":619,"r":null}},"2022":{"L":{"m":530,"r":null},"W":{"m":598,"r":null}},"2021":{"L":{"m":613,"r":null},"W":{"m":631,"r":null}}}},{"n":"厦门大学","c":"10384","t":["985","211","双一流"],"y":{"2025":{"P":{"m":648,"r":9130},"H":{"m":642,"r":774}},"2024":{"L":{"m":634,"r":7548},"W":{"m":617,"r":839}},"2023":{"L":{"m":638,"r":null},"W":{"m":640,"r":null}},"2022":{"L":{"m":628,"r":null},"W":{"m":607,"r":null}},"2021":{"L":{"m":649,"r":null},"W":{"m":644,"r":null}}}},{"n":"山东大学","c":"10422","t":["985","211","双一流"],"y":{"2025":{"P":{"m":641,"r":12353},"H":{"m":628,"r":1731}},"2024":{"L":{"m":622,"r":11767},"W":{"m":598,"r":2188}},"2023":{"L":{"m":611,"r":null},"W":{"m":623,"r":null}},"2022":{"L":{"m":613,"r":null},"W":{"m":598,"r":null}},"2021":{"L":{"m":638,"r":null},"W":{"m":636,"r":null}}}},{"n":"中国海洋大学","c":"10423","t":["985","211","双一流"],"y":{"2025":{"P":{"m":628,"r":20262},"H":{"m":622,"r":2375}},"2024":{"L":{"m":617,"r":13941},"W":{"m":598,"r":2188}},"2023":{"L":{"m":610,"r":null},"W":{"m":614,"r":null}},"2022":{"L":{"m":597,"r":null},"W":{"m":578,"r":null}},"2021":{"L":{"m":624,"r":null},"W":{"m":628,"r":null}}}},{"n":"华中科技大学","c":"10487","t":["985","211","双一流"],"y":{"2025":{"P":{"m":667,"r":3171},"H":{"m":634,"r":1240}},"2024":{"L":{"m":650,"r":3784},"W":{"m":604,"r":1661}},"2023":{"L":{"m":633,"r":null},"W":{"m":634,"r":null}},"2022":{"L":{"m":638,"r":null},"W":{"m":604,"r":null}},"2021":{"L":{"m":658,"r":null},"W":{"m":640,"r":null}}}},{"n":"武汉大学","c":"10486","t":["985","211","双一流"],"y":{"2025":{"P":{"m":662,"r":4316},"H":{"m":624,"r":2158}},"2024":{"L":{"m":652,"r":3441},"W":{"m":622,"r":614}},"2023":{"L":{"m":641,"r":null},"W":{"m":648,"r":null}},"2022":{"L":{"m":637,"r":null},"W":{"m":615,"r":null}},"2021":{"L":{"m":654,"r":null},"W":{"m":636,"r":null}}}},{"n":"中南大学","c":"10533","t":["985","211","双一流"],"y":{"2025":{"P":{"m":645,"r":10445},"H":{"m":631,"r":1475}},"2024":{"L":{"m":622,"r":11767},"W":{"m":608,"r":1351}},"2023":{"L":{"m":621,"r":null},"W":{"m":630,"r":null}},"2022":{"L":{"m":609,"r":null},"W":{"m":598,"r":null}},"2021":{"L":{"m":632,"r":null},"W":{"m":636,"r":null}}}},{"n":"中山大学","c":"10558","t":["985","211","双一流"],"y":{"2025":{"P":{"m":654,"r":6779},"H":{"m":642,"r":774}},"2024":{"L":{"m":647,"r":4332},"W":{"m":619,"r":742}},"2023":{"L":{"m":645,"r":null},"W":{"m":641,"r":null}},"2022":{"L":{"m":629,"r":null},"W":{"m":607,"r":null}},"2021":{"L":{"m":645,"r":null},"W":{"m":642,"r":null}}}},{"n":"湖南大学","c":"10532","t":["985","211","双一流"],"y":{"2025":{"P":{"m":641,"r":12353},"H":{"m":617,"r":3030}},"2024":{"L":{"m":620,"r":12607},"W":{"m":602,"r":1802}},"2023":{"L":{"m":619,"r":null},"W":{"m":629,"r":null}},"2022":{"L":{"m":615,"r":null},"W":{"m":597,"r":null}},"2021":{"L":{"m":633,"r":null},"W":{"m":634,"r":null}}}},{"n":"华南理工大学","c":"10561","t":["985","211","双一流"],"y":{"2025":{"P":{"m":652,"r":7511},"H":{"m":626,"r":1923}},"2024":{"L":{"m":632,"r":8139},"W":{"m":587,"r":3514}},"2023":{"L":{"m":638,"r":null},"W":{"m":623,"r":null}},"2022":{"L":{"m":621,"r":null},"W":{"m":592,"r":null}},"2021":{"L":{"m":644,"r":null},"W":{"m":630,"r":null}}}},{"n":"四川大学","c":"10610","t":["985","211","双一流"],"y":{"2025":{"P":{"m":617,"r":28989},"H":{"m":610,"r":4141}},"2024":{"L":{"m":634,"r":7548},"W":{"m":607,"r":1416}},"2023":{"L":{"m":627,"r":null},"W":{"m":626,"r":null}},"2022":{"L":{"m":618,"r":null},"W":{"m":598,"r":null}},"2021":{"L":{"m":642,"r":null},"W":{"m":641,"r":null}}}},{"n":"重庆大学","c":"10611","t":["985","211","双一流"],"y":{"2025":{"P":{"m":651,"r":7914},"H":{"m":605,"r":5105}},"2024":{"L":{"m":629,"r":9133},"W":{"m":609,"r":1292}},"2023":{"L":{"m":623,"r":null},"W":{"m":630,"r":null}},"2022":{"L":{"m":612,"r":null},"W":{"m":599,"r":null}},"2021":{"L":{"m":637,"r":null},"W":{"m":634,"r":null}}}},{"n":"电子科技大学","c":"10614","t":["985","211","双一流"],"y":{"2025":{"P":{"m":659,"r":5147},"H":{"m":626,"r":1923}},"2024":{"L":{"m":643,"r":5177},"W":{"m":594,"r":2620}},"2023":{"L":{"m":646,"r":null},"W":{"m":623,"r":null}},"2022":{"L":{"m":629,"r":null},"W":{"m":594,"r":null}},"2021":{"L":{"m":651,"r":null},"W":{"m":630,"r":null}}}},{"n":"西北工业大学","c":"10699","t":["985","211","双一流"],"y":{"2025":{"P":{"m":667,"r":3171},"H":{"m":627,"r":1833}},"2024":{"L":{"m":649,"r":3955},"W":{"m":600,"r":1985}},"2023":{"L":{"m":644,"r":null},"W":{"m":621,"r":null}},"2022":{"L":{"m":627,"r":null},"W":{"m":591,"r":null}},"2021":{"L":{"m":645,"r":null},"W":{"m":627,"r":null}}}},{"n":"北京工业大学","c":"10005","t":["211","双一流"],"y":{"2025":{"P":{"m":634,"r":16357}},"2024":{"L":{"m":608,"r":18642}},"2023":{"L":{"m":610,"r":null}},"2022":{"L":{"m":596,"r":null}},"2021":{"L":{"m":623,"r":null}}}},{"n":"西安交通大学","c":"10698","t":["985","211","双一流"],"y":{"2025":{"P":{"m":659,"r":5147},"H":{"m":640,"r":874}},"2024":{"L":{"m":664,"r":1823},"W":{"m":617,"r":839}},"2023":{"L":{"m":657,"r":null},"W":{"m":635,"r":null}},"2022":{"L":{"m":637,"r":null},"W":{"m":604,"r":null}},"2021":{"L":{"m":658,"r":null},"W":{"m":640,"r":null}}}},{"n":"北京交通大学","c":"10004","t":["211","双一流"],"y":{"2025":{"P":{"m":648,"r":9130},"H":{"m":617,"r":3030}},"2024":{"L":{"m":613,"r":15913},"W":{"m":589,"r":3241}},"2023":{"L":{"m":622,"r":null},"W":{"m":620,"r":null}},"2022":{"L":{"m":610,"r":null},"W":{"m":588,"r":null}},"2021":{"L":{"m":625,"r":null},"W":{"m":618,"r":null}}}},{"n":"北京化工大学","c":"10010","t":["211","双一流"],"y":{"2025":{"P":{"m":634,"r":16357},"H":{"m":612,"r":3818}},"2024":{"L":{"m":609,"r":18059},"W":{"m":582,"r":4356}},"2023":{"L":{"m":607,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":593,"r":null},"W":{"m":532,"r":null}},"2021":{"L":{"m":612,"r":null},"W":{"m":616,"r":null}}}},{"n":"北京邮电大学","c":"10013","t":["211","双一流"],"y":{"2025":{"P":{"m":659,"r":5147},"H":{"m":622,"r":2375}},"2023":{"L":{"m":638,"r":null},"W":{"m":616,"r":null}},"2022":{"L":{"m":624,"r":null},"W":{"m":588,"r":null}},"2021":{"L":{"m":646,"r":null},"W":{"m":624,"r":null}}}},{"n":"北京科技大学","c":"10008","t":["211","双一流"],"y":{"2025":{"P":{"m":643,"r":11370},"H":{"m":620,"r":2608}},"2024":{"L":{"m":620,"r":12607},"W":{"m":593,"r":2728}},"2023":{"L":{"m":621,"r":null},"W":{"m":610,"r":null}},"2022":{"L":{"m":604,"r":null},"W":{"m":544,"r":null}},"2021":{"L":{"m":625,"r":null},"W":{"m":625,"r":null}}}},{"n":"兰州大学","c":"10730","t":["985","211","双一流"],"y":{"2025":{"P":{"m":625,"r":22450},"H":{"m":619,"r":2754}},"2024":{"L":{"m":620,"r":12607},"W":{"m":594,"r":2620}},"2023":{"L":{"m":606,"r":null},"W":{"m":611,"r":null}},"2022":{"L":{"m":602,"r":null},"W":{"m":590,"r":null}},"2021":{"L":{"m":606,"r":null},"W":{"m":627,"r":null}}}},{"n":"首都师范大学","c":"10028","t":[],"y":{"2025":{"P":{"m":610,"r":35524},"H":{"m":609,"r":4353}},"2024":{"L":{"m":590,"r":30887},"W":{"m":579,"r":4869}},"2023":{"L":{"m":591,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":582,"r":null},"W":{"m":580,"r":null}},"2021":{"L":{"m":600,"r":null},"W":{"m":619,"r":null}}}},{"n":"西北农林科技大学","c":"10712","t":["985","211","双一流"],"y":{"2025":{"P":{"m":613,"r":32607},"H":{"m":612,"r":3818}},"2024":{"L":{"m":596,"r":26465},"W":{"m":589,"r":3241}},"2023":{"L":{"m":589,"r":null},"W":{"m":608,"r":null}},"2022":{"L":{"m":574,"r":null},"W":{"m":579,"r":null}},"2021":{"L":{"m":601,"r":null},"W":{"m":615,"r":null}}}},{"n":"北京中医药大学","c":"10026","t":["211","双一流"],"y":{"2025":{"P":{"m":589,"r":59240},"H":{"m":620,"r":2608}},"2024":{"L":{"m":599,"r":24309},"W":{"m":604,"r":1661}},"2023":{"L":{"m":576,"r":null},"W":{"m":614,"r":null}},"2022":{"L":{"m":581,"r":null},"W":{"m":593,"r":null}},"2021":{"L":{"m":605,"r":null},"W":{"m":625,"r":null}}}},{"n":"北京林业大学","c":"10022","t":["211","双一流"],"y":{"2025":{"P":{"m":610,"r":35524},"H":{"m":615,"r":3337}},"2024":{"L":{"m":589,"r":31680},"W":{"m":586,"r":3651}},"2023":{"L":{"m":587,"r":null},"W":{"m":608,"r":null}},"2022":{"L":{"m":581,"r":null},"W":{"m":582,"r":null}},"2021":{"L":{"m":597,"r":null},"W":{"m":621,"r":null}}}},{"n":"中国传媒大学","c":"10033","t":["211","双一流"],"y":{"2025":{"P":{"m":624,"r":23204},"H":{"m":612,"r":3818}},"2024":{"L":{"m":599,"r":24309},"W":{"m":591,"r":2990}},"2023":{"L":{"m":590,"r":null},"W":{"m":615,"r":null}},"2022":{"L":{"m":599,"r":null},"W":{"m":587,"r":null}},"2021":{"L":{"m":619,"r":null},"W":{"m":632,"r":null}}}},{"n":"北京外国语大学","c":"10030","t":["211","双一流"],"y":{"2025":{"P":{"m":627,"r":20939},"H":{"m":623,"r":2268}},"2024":{"L":{"m":603,"r":21656}},"2023":{"L":{"m":598,"r":null},"W":{"m":620,"r":null}},"2022":{"L":{"m":593,"r":null},"W":{"m":593,"r":null}},"2021":{"L":{"m":629,"r":null},"W":{"m":629,"r":null}}}},{"n":"对外经济贸易大学","c":"10036","t":["211","双一流"],"y":{"2025":{"P":{"m":637,"r":14500},"H":{"m":631,"r":1475}},"2024":{"L":{"m":616,"r":14396},"W":{"m":593,"r":2728}},"2023":{"L":{"m":609,"r":null},"W":{"m":632,"r":null}},"2022":{"L":{"m":618,"r":null},"W":{"m":602,"r":null}},"2021":{"L":{"m":642,"r":null},"W":{"m":638,"r":null}}}},{"n":"北京体育大学","c":"10043","t":["211","双一流"],"y":{"2025":{"P":{"m":608,"r":37473},"H":{"m":605,"r":5105}},"2024":{"L":{"m":585,"r":35066},"W":{"m":575,"r":5676}},"2023":{"L":{"m":583,"r":null},"W":{"m":595,"r":null}},"2022":{"L":{"m":573,"r":null},"W":{"m":570,"r":null}},"2021":{"L":{"m":571,"r":null},"W":{"m":597,"r":null}}}},{"n":"中央财经大学","c":"10034","t":["211","双一流"],"y":{"2025":{"P":{"m":640,"r":12870},"H":{"m":633,"r":1313}},"2024":{"L":{"m":618,"r":13475},"W":{"m":604,"r":1661}},"2023":{"L":{"m":601,"r":null},"W":{"m":628,"r":null}},"2022":{"L":{"m":615,"r":null},"W":{"m":586,"r":null}},"2021":{"L":{"m":632,"r":null},"W":{"m":636,"r":null}}}},{"n":"中国政法大学","c":"10053","t":["211","双一流"],"y":{"2025":{"P":{"m":636,"r":15066},"H":{"m":627,"r":1833}},"2024":{"L":{"m":624,"r":10962},"W":{"m":604,"r":1661}},"2023":{"L":{"m":613,"r":null},"W":{"m":630,"r":null}},"2022":{"L":{"m":610,"r":null},"W":{"m":590,"r":null}},"2021":{"L":{"m":631,"r":null},"W":{"m":637,"r":null}}}},{"n":"华北电力大学(北京)","c":"10054","t":["211","双一流"],"y":{"2025":{"P":{"m":622,"r":24764},"H":{"m":614,"r":3480}},"2024":{"L":{"m":617,"r":13941},"W":{"m":582,"r":4356}},"2023":{"L":{"m":615,"r":null},"W":{"m":606,"r":null}},"2022":{"L":{"m":587,"r":null},"W":{"m":574,"r":null}},"2021":{"L":{"m":622,"r":null},"W":{"m":620,"r":null}}}},{"n":"河北工业大学","c":"10080","t":["211","双一流"],"y":{"2025":{"P":{"m":612,"r":33569},"H":{"m":601,"r":5929}},"2024":{"L":{"m":600,"r":23638},"W":{"m":570,"r":6767}},"2023":{"L":{"m":603,"r":null},"W":{"m":599,"r":null}},"2022":{"L":{"m":590,"r":null},"W":{"m":569,"r":null}},"2021":{"L":{"m":610,"r":null},"W":{"m":610,"r":null}}}},{"n":"华北电力大学(保定)","c":"10079","t":["211","双一流"],"y":{"2025":{"P":{"m":609,"r":36486},"H":{"m":604,"r":5311}},"2024":{"L":{"m":602,"r":22336},"W":{"m":578,"r":5068}},"2023":{"L":{"m":608,"r":null},"W":{"m":599,"r":null}},"2022":{"L":{"m":591,"r":null},"W":{"m":573,"r":null}},"2021":{"L":{"m":609,"r":null},"W":{"m":607,"r":null}}}},{"n":"山西大学","c":"10108","t":["双一流"],"y":{"2025":{"P":{"m":582,"r":68439},"H":{"m":587,"r":9816}},"2024":{"L":{"m":524,"r":109654},"W":{"m":535,"r":18736}},"2023":{"L":{"m":579,"r":null},"W":{"m":594,"r":null}},"2022":{"L":{"m":571,"r":null},"W":{"m":565,"r":null}},"2021":{"L":{"m":573,"r":null},"W":{"m":592,"r":null}}}},{"n":"大连海事大学","c":"10151","t":["211","双一流"],"y":{"2025":{"P":{"m":607,"r":38498},"H":{"m":606,"r":4916}},"2024":{"L":{"m":555,"r":66810},"W":{"m":590,"r":3112}},"2023":{"L":{"m":600,"r":null},"W":{"m":609,"r":null}},"2022":{"L":{"m":587,"r":null},"W":{"m":573,"r":null}},"2021":{"L":{"m":600,"r":null},"W":{"m":611,"r":null}}}},{"n":"东北财经大学","c":"10173","t":[],"y":{"2025":{"P":{"m":604,"r":41663},"H":{"m":607,"r":4725}},"2024":{"L":{"m":574,"r":45456},"W":{"m":566,"r":7718}},"2023":{"L":{"m":564,"r":null},"W":{"m":593,"r":null}},"2022":{"L":{"m":529,"r":null},"W":{"m":559,"r":null}},"2021":{"L":{"m":595,"r":null},"W":{"m":595,"r":null}}}},{"n":"太原理工大学","c":"10112","t":["211","双一流"],"y":{"2025":{"P":{"m":615,"r":30812},"H":{"m":606,"r":4916}},"2024":{"L":{"m":595,"r":27214},"W":{"m":579,"r":4869}},"2023":{"L":{"m":596,"r":null},"W":{"m":599,"r":null}},"2022":{"L":{"m":562,"r":null},"W":{"m":572,"r":null}},"2021":{"L":{"m":601,"r":null},"W":{"m":609,"r":null}}}},{"n":"中国医科大学","c":"10159","t":[],"y":{"2025":{"P":{"m":580,"r":71205}},"2024":{"L":{"m":598,"r":25049}},"2023":{"L":{"m":594,"r":null}},"2022":{"L":{"m":558,"r":null}},"2021":{"L":{"m":576,"r":null}}}},{"n":"内蒙古大学","c":"10126","t":["211","双一流"],"y":{"2025":{"P":{"m":598,"r":48131},"H":{"m":594,"r":7705}},"2024":{"L":{"m":552,"r":70602},"W":{"m":549,"r":13056}},"2023":{"L":{"m":569,"r":null},"W":{"m":589,"r":null}},"2022":{"L":{"m":559,"r":null},"W":{"m":564,"r":null}},"2021":{"L":{"m":565,"r":null},"W":{"m":604,"r":null}}}},{"n":"辽宁大学","c":"10140","t":["211","双一流"],"y":{"2025":{"P":{"m":600,"r":45887},"H":{"m":586,"r":10140}},"2024":{"L":{"m":589,"r":31680},"W":{"m":576,"r":5468}},"2023":{"L":{"m":587,"r":null},"W":{"m":592,"r":null}},"2022":{"L":{"m":555,"r":null},"W":{"m":575,"r":null}},"2021":{"L":{"m":583,"r":null},"W":{"m":610,"r":null}}}},{"n":"延边大学","c":"10184","t":["211","双一流"],"y":{"2025":{"P":{"m":578,"r":74079},"H":{"m":593,"r":7978}},"2024":{"L":{"m":549,"r":74409},"W":{"m":560,"r":9395}},"2023":{"L":{"m":549,"r":null},"W":{"m":572,"r":null}},"2022":{"L":{"m":564,"r":null},"W":{"m":558,"r":null}},"2021":{"L":{"m":553,"r":null},"W":{"m":601,"r":null}}}},{"n":"东北师范大学","c":"10200","t":["211","双一流"],"y":{"2025":{"P":{"m":588,"r":60488},"H":{"m":591,"r":8585}},"2024":{"L":{"m":592,"r":29369},"W":{"m":587,"r":3514}},"2023":{"L":{"m":575,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":587,"r":null},"W":{"m":581,"r":null}},"2021":{"L":{"m":601,"r":null},"W":{"m":614,"r":null}}}},{"n":"哈尔滨工程大学","c":"10217","t":["211","双一流"],"y":{"2025":{"P":{"m":645,"r":10445},"H":{"m":604,"r":5311}},"2024":{"L":{"m":624,"r":10962},"W":{"m":576,"r":5468}},"2023":{"L":{"m":617,"r":null},"W":{"m":602,"r":null}},"2022":{"L":{"m":599,"r":null},"W":{"m":573,"r":null}},"2021":{"L":{"m":615,"r":null},"W":{"m":609,"r":null}}}},{"n":"东北农业大学","c":"10224","t":["211","双一流"],"y":{"2025":{"P":{"m":591,"r":56625},"H":{"m":598,"r":6664}},"2024":{"L":{"m":572,"r":47548},"W":{"m":563,"r":8497}},"2023":{"L":{"m":551,"r":null},"W":{"m":592,"r":null}},"2022":{"L":{"m":529,"r":null},"W":{"m":567,"r":null}},"2021":{"L":{"m":585,"r":null},"W":{"m":604,"r":null}}}},{"n":"东华大学","c":"10255","t":["211","双一流"],"y":{"2025":{"P":{"m":632,"r":17632},"H":{"m":617,"r":3030}},"2024":{"L":{"m":610,"r":17519},"W":{"m":587,"r":3514}},"2023":{"L":{"m":597,"r":null}},"2022":{"L":{"m":575,"r":null}},"2021":{"L":{"m":616,"r":null}}}},{"n":"上海外国语大学","c":"10271","t":["211","双一流"],"y":{"2025":{"P":{"m":622,"r":24764},"H":{"m":623,"r":2268}},"2024":{"L":{"m":602,"r":22336},"W":{"m":594,"r":2620}},"2023":{"L":{"m":593,"r":null},"W":{"m":615,"r":null}},"2022":{"L":{"m":547,"r":null},"W":{"m":544,"r":null}},"2021":{"L":{"m":628,"r":null},"W":{"m":635,"r":null}}}},{"n":"华东理工大学","c":"10251","t":["211","双一流"],"y":{"2025":{"P":{"m":637,"r":14500},"H":{"m":607,"r":4725}},"2024":{"L":{"m":614,"r":15402},"W":{"m":579,"r":4869}},"2023":{"L":{"m":611,"r":null},"W":{"m":602,"r":null}},"2022":{"L":{"m":569,"r":null},"W":{"m":535,"r":null}},"2021":{"L":{"m":623,"r":null},"W":{"m":621,"r":null}}}},{"n":"东北林业大学","c":"10225","t":["211","双一流"],"y":{"2025":{"P":{"m":582,"r":68439},"H":{"m":597,"r":6932}},"2024":{"L":{"m":581,"r":38682},"W":{"m":570,"r":6767}},"2023":{"L":{"m":570,"r":null},"W":{"m":590,"r":null}},"2022":{"L":{"m":511,"r":null},"W":{"m":548,"r":null}},"2021":{"L":{"m":590,"r":null},"W":{"m":606,"r":null}}}},{"n":"哈尔滨医科大学","c":"10226","t":[],"y":{"2025":{"P":{"m":536,"r":142192},"H":{"m":554,"r":24237}},"2024":{"L":{"m":571,"r":48594},"W":{"m":534,"r":19197}},"2023":{"L":{"m":565,"r":null},"W":{"m":559,"r":null}},"2022":{"L":{"m":565,"r":null},"W":{"m":535,"r":null}},"2021":{"L":{"m":569,"r":null},"W":{"m":569,"r":null}}}},{"n":"华东政法大学","c":"10276","t":[],"y":{"2025":{"P":{"m":611,"r":34569},"H":{"m":610,"r":4141}},"2024":{"L":{"m":567,"r":52721},"W":{"m":584,"r":4004}},"2023":{"L":{"m":588,"r":null},"W":{"m":614,"r":null}},"2022":{"L":{"m":576,"r":null},"W":{"m":564,"r":null}},"2021":{"L":{"m":592,"r":null},"W":{"m":622,"r":null}}}},{"n":"上海财经大学","c":"10272","t":["211","双一流"],"y":{"2025":{"P":{"m":640,"r":12870},"H":{"m":636,"r":1112}},"2024":{"L":{"m":618,"r":13475},"W":{"m":611,"r":1163}},"2023":{"L":{"m":617,"r":null},"W":{"m":632,"r":null}},"2022":{"L":{"m":613,"r":null},"W":{"m":601,"r":null}},"2021":{"L":{"m":642,"r":null},"W":{"m":641,"r":null}}}},{"n":"上海大学","c":"10280","t":["211","双一流"],"y":{"2025":{"P":{"m":631,"r":18242},"H":{"m":599,"r":6410}},"2024":{"L":{"m":610,"r":17519},"W":{"m":594,"r":2620}},"2023":{"L":{"m":609,"r":null},"W":{"m":620,"r":null}},"2022":{"L":{"m":589,"r":null},"W":{"m":591,"r":null}},"2021":{"L":{"m":621,"r":null},"W":{"m":626,"r":null}}}},{"n":"南京理工大学","c":"10288","t":["211","双一流"],"y":{"2025":{"P":{"m":648,"r":9130},"H":{"m":613,"r":3645}},"2024":{"L":{"m":621,"r":12204}},"2023":{"L":{"m":624,"r":null}},"2022":{"L":{"m":610,"r":null}},"2021":{"L":{"m":625,"r":null}}}},{"n":"南京邮电大学","c":"10293","t":["双一流"],"y":{"2025":{"P":{"m":629,"r":19599}},"2024":{"L":{"m":591,"r":30123}},"2023":{"L":{"m":610,"r":null},"W":{"m":593,"r":null}},"2022":{"L":{"m":582,"r":null},"W":{"m":563,"r":null}},"2021":{"L":{"m":598,"r":null},"W":{"m":590,"r":null}}}},{"n":"南京航空航天大学","c":"10287","t":["211","双一流"],"y":{"2025":{"P":{"m":651,"r":7914},"H":{"m":612,"r":3818}},"2024":{"L":{"m":630,"r":8810},"W":{"m":562,"r":8811}},"2023":{"L":{"m":627,"r":null},"W":{"m":615,"r":null}},"2022":{"L":{"m":613,"r":null},"W":{"m":587,"r":null}},"2021":{"L":{"m":627,"r":null},"W":{"m":622,"r":null}}}},{"n":"苏州大学","c":"10285","t":["211","双一流"],"y":{"2025":{"P":{"m":622,"r":24764},"H":{"m":619,"r":2754}},"2024":{"L":{"m":601,"r":22963},"W":{"m":593,"r":2728}},"2023":{"L":{"m":620,"r":null},"W":{"m":612,"r":null}},"2022":{"L":{"m":604,"r":null},"W":{"m":588,"r":null}},"2021":{"L":{"m":621,"r":null},"W":{"m":624,"r":null}}}},{"n":"中国矿业大学","c":"10290","t":["211","双一流"],"y":{"2025":{"P":{"m":606,"r":39518},"H":{"m":608,"r":4542}},"2024":{"L":{"m":598,"r":25049},"W":{"m":584,"r":4004}},"2023":{"L":{"m":596,"r":null},"W":{"m":601,"r":null}},"2022":{"L":{"m":566,"r":null},"W":{"m":574,"r":null}},"2021":{"L":{"m":596,"r":null},"W":{"m":611,"r":null}}}},{"n":"中国药科大学","c":"10316","t":["211","双一流"],"y":{"2025":{"P":{"m":625,"r":22450},"H":{"m":610,"r":4141}},"2024":{"L":{"m":603,"r":21656},"W":{"m":582,"r":4356}},"2023":{"L":{"m":600,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":586,"r":null},"W":{"m":576,"r":null}},"2021":{"L":{"m":604,"r":null},"W":{"m":608,"r":null}}}},{"n":"江南大学","c":"10295","t":["211","双一流"],"y":{"2025":{"P":{"m":616,"r":29930},"H":{"m":617,"r":3030}},"2024":{"L":{"m":597,"r":25762},"W":{"m":588,"r":3378}},"2023":{"L":{"m":608,"r":null},"W":{"m":609,"r":null}},"2022":{"L":{"m":589,"r":null},"W":{"m":575,"r":null}},"2021":{"L":{"m":605,"r":null},"W":{"m":599,"r":null}}}},{"n":"河海大学","c":"10294","t":["211","双一流"],"y":{"2025":{"P":{"m":622,"r":24764},"H":{"m":611,"r":3972}},"2024":{"L":{"m":584,"r":35948},"W":{"m":584,"r":4004}},"2023":{"L":{"m":608,"r":null},"W":{"m":610,"r":null}},"2022":{"L":{"m":596,"r":null},"W":{"m":581,"r":null}},"2021":{"L":{"m":613,"r":null},"W":{"m":617,"r":null}}}},{"n":"杭州电子科技大学","c":"10336","t":[],"y":{"2025":{"P":{"m":592,"r":55298},"H":{"m":594,"r":7705}},"2024":{"L":{"m":599,"r":24309},"W":{"m":563,"r":8497}},"2023":{"L":{"m":550,"r":null}},"2022":{"L":{"m":553,"r":null}},"2021":{"L":{"m":565,"r":null}}}},{"n":"南京农业大学","c":"10307","t":["211","双一流"],"y":{"2025":{"P":{"m":601,"r":44843},"H":{"m":605,"r":5105}},"2024":{"L":{"m":593,"r":28637},"W":{"m":578,"r":5068}},"2023":{"L":{"m":581,"r":null},"W":{"m":599,"r":null}},"2022":{"L":{"m":509,"r":null},"W":{"m":573,"r":null}},"2021":{"L":{"m":588,"r":null},"W":{"m":611,"r":null}}}},{"n":"南京师范大学","c":"10319","t":["211","双一流"],"y":{"2025":{"P":{"m":614,"r":31705},"H":{"m":618,"r":2901}},"2024":{"L":{"m":592,"r":29369},"W":{"m":590,"r":3112}},"2023":{"L":{"m":597,"r":null},"W":{"m":610,"r":null}},"2022":{"L":{"m":580,"r":null},"W":{"m":584,"r":null}},"2021":{"L":{"m":616,"r":null},"W":{"m":624,"r":null}}}},{"n":"南京信息工程大学","c":"10300","t":["双一流"],"y":{"2025":{"P":{"m":615,"r":30812},"H":{"m":600,"r":6178}},"2024":{"L":{"m":591,"r":30123},"W":{"m":571,"r":6515}},"2023":{"L":{"m":593,"r":null},"W":{"m":597,"r":null}},"2022":{"L":{"m":550,"r":null},"W":{"m":567,"r":null}},"2021":{"L":{"m":595,"r":null},"W":{"m":605,"r":null}}}},{"n":"安徽大学","c":"10357","t":["211","双一流"],"y":{"2025":{"P":{"m":609,"r":36486},"H":{"m":606,"r":4916}},"2024":{"L":{"m":594,"r":27919},"W":{"m":576,"r":5468}},"2023":{"L":{"m":604,"r":null},"W":{"m":602,"r":null}},"2022":{"L":{"m":585,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":578,"r":null},"W":{"m":607,"r":null}}}},{"n":"合肥工业大学","c":"10359","t":["211","双一流"],"y":{"2025":{"P":{"m":589,"r":59240},"H":{"m":605,"r":5105}},"2024":{"L":{"m":605,"r":20456},"W":{"m":577,"r":5265}},"2023":{"L":{"m":601,"r":null},"W":{"m":599,"r":null}},"2022":{"L":{"m":570,"r":null},"W":{"m":545,"r":null}},"2021":{"L":{"m":606,"r":null},"W":{"m":610,"r":null}}}},{"n":"福州大学","c":"10386","t":["211","双一流"],"y":{"2025":{"P":{"m":600,"r":45887},"H":{"m":609,"r":4353}},"2024":{"L":{"m":576,"r":43459},"W":{"m":585,"r":3808}},"2023":{"L":{"m":595,"r":null},"W":{"m":601,"r":null}},"2022":{"L":{"m":582,"r":null},"W":{"m":575,"r":null}},"2021":{"L":{"m":589,"r":null},"W":{"m":615,"r":null}}}},{"n":"华侨大学","c":"10385","t":[],"y":{"2025":{"P":{"m":549,"r":119532},"H":{"m":558,"r":22165}},"2024":{"L":{"m":513,"r":126985},"W":{"m":521,"r":25688}},"2023":{"L":{"m":534,"r":null},"W":{"m":553,"r":null}},"2022":{"L":{"m":560,"r":null},"W":{"m":556,"r":null}},"2021":{"L":{"m":572,"r":null},"W":{"m":586,"r":null}}}},{"n":"江西财经大学","c":"10421","t":[],"y":{"2025":{"P":{"m":594,"r":52849},"H":{"m":597,"r":6932}},"2024":{"L":{"m":560,"r":60745},"W":{"m":565,"r":7940}},"2023":{"L":{"m":561,"r":null},"W":{"m":582,"r":null}},"2022":{"L":{"m":542,"r":null},"W":{"m":550,"r":null}},"2021":{"L":{"m":526,"r":null},"W":{"m":559,"r":null}}}},{"n":"南昌大学","c":"10403","t":["211","双一流"],"y":{"2025":{"P":{"m":602,"r":43771},"H":{"m":594,"r":7705}},"2024":{"L":{"m":581,"r":38682},"W":{"m":577,"r":5265}},"2023":{"L":{"m":597,"r":null},"W":{"m":604,"r":null}},"2022":{"L":{"m":580,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":594,"r":null},"W":{"m":612,"r":null}}}},{"n":"山东师范大学","c":"10445","t":[],"y":{"2025":{"P":{"m":552,"r":114348},"H":{"m":553,"r":24753}},"2024":{"L":{"m":525,"r":108197},"W":{"m":521,"r":25688}},"2023":{"L":{"m":564,"r":null},"W":{"m":575,"r":null}},"2022":{"L":{"m":548,"r":null},"W":{"m":562,"r":null}},"2021":{"L":{"m":569,"r":null},"W":{"m":595,"r":null}}}},{"n":"中国石油大学(华东)","c":"10425","t":["211","双一流"],"y":{"2025":{"P":{"m":612,"r":33569},"H":{"m":608,"r":4542}},"2024":{"L":{"m":593,"r":28637},"W":{"m":558,"r":10012}},"2023":{"L":{"m":597,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":578,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":595,"r":null},"W":{"m":611,"r":null}}}},{"n":"武汉科技大学","c":"10488","t":[],"y":{"2025":{"P":{"m":596,"r":50521},"H":{"m":586,"r":10140}},"2024":{"L":{"m":564,"r":56189},"W":{"m":546,"r":14153}},"2023":{"L":{"m":577,"r":null},"W":{"m":588,"r":null}},"2022":{"L":{"m":574,"r":null},"W":{"m":562,"r":null}},"2021":{"L":{"m":591,"r":null},"W":{"m":595,"r":null}}}},{"n":"中国地质大学(武汉)","c":"10491","t":["211","双一流"],"y":{"2025":{"P":{"m":614,"r":31705},"H":{"m":609,"r":4353}},"2024":{"L":{"m":585,"r":35066},"W":{"m":580,"r":4709}},"2023":{"L":{"m":596,"r":null},"W":{"m":601,"r":null}},"2022":{"L":{"m":564,"r":null},"W":{"m":578,"r":null}},"2021":{"L":{"m":606,"r":null},"W":{"m":616,"r":null}}}},{"n":"武汉理工大学","c":"10497","t":["211","双一流"],"y":{"2025":{"P":{"m":637,"r":14500},"H":{"m":610,"r":4141}},"2024":{"L":{"m":609,"r":18059},"W":{"m":581,"r":4526}},"2023":{"L":{"m":609,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":601,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":618,"r":null},"W":{"m":615,"r":null}}}},{"n":"华中农业大学","c":"10504","t":["211","双一流"],"y":{"2025":{"P":{"m":602,"r":43771},"H":{"m":604,"r":5311}},"2024":{"L":{"m":590,"r":30887},"W":{"m":577,"r":5265}},"2023":{"L":{"m":585,"r":null},"W":{"m":598,"r":null}},"2022":{"L":{"m":576,"r":null},"W":{"m":575,"r":null}},"2021":{"L":{"m":597,"r":null},"W":{"m":609,"r":null}}}},{"n":"华中师范大学","c":"10511","t":["211","双一流"],"y":{"2025":{"P":{"m":613,"r":32607},"H":{"m":619,"r":2754}},"2024":{"L":{"m":598,"r":25049},"W":{"m":590,"r":3112}},"2023":{"L":{"m":593,"r":null},"W":{"m":610,"r":null}},"2022":{"L":{"m":582,"r":null},"W":{"m":590,"r":null}},"2021":{"L":{"m":620,"r":null},"W":{"m":626,"r":null}}}},{"n":"中南民族大学","c":"10524","t":[],"y":{"2025":{"P":{"m":580,"r":71205},"H":{"m":592,"r":8282}},"2024":{"L":{"m":549,"r":74409},"W":{"m":557,"r":10292}},"2023":{"L":{"m":539,"r":null},"W":{"m":578,"r":null}},"2022":{"L":{"m":509,"r":null},"W":{"m":559,"r":null}},"2021":{"L":{"m":573,"r":null},"W":{"m":594,"r":null}}}},{"n":"中南财经政法大学","c":"10520","t":["211","双一流"],"y":{"2025":{"P":{"m":625,"r":22450},"H":{"m":621,"r":2500}},"2024":{"L":{"m":598,"r":25049},"W":{"m":570,"r":6767}},"2023":{"L":{"m":571,"r":null},"W":{"m":624,"r":null}},"2022":{"L":{"m":597,"r":null},"W":{"m":586,"r":null}},"2021":{"L":{"m":603,"r":null},"W":{"m":628,"r":null}}}},{"n":"暨南大学","c":"10559","t":["211","双一流"],"y":{"2025":{"P":{"m":617,"r":28989},"H":{"m":601,"r":5929}},"2024":{"L":{"m":587,"r":33383},"W":{"m":577,"r":5265}},"2023":{"L":{"m":597,"r":null},"W":{"m":613,"r":null}},"2022":{"L":{"m":600,"r":null},"W":{"m":587,"r":null}},"2021":{"L":{"m":617,"r":null},"W":{"m":623,"r":null}}}},{"n":"华南师范大学","c":"10574","t":["211","双一流"],"y":{"2025":{"P":{"m":612,"r":33569},"H":{"m":612,"r":3818}},"2024":{"L":{"m":595,"r":27214},"W":{"m":581,"r":4526}},"2023":{"L":{"m":591,"r":null},"W":{"m":605,"r":null}},"2022":{"L":{"m":571,"r":null},"W":{"m":573,"r":null}},"2021":{"L":{"m":613,"r":null},"W":{"m":621,"r":null}}}},{"n":"湖南师范大学","c":"10542","t":["211","双一流"],"y":{"2025":{"P":{"m":605,"r":40609},"H":{"m":606,"r":4916}},"2024":{"L":{"m":551,"r":71851},"W":{"m":572,"r":6284}},"2023":{"L":{"m":591,"r":null},"W":{"m":604,"r":null}},"2022":{"L":{"m":570,"r":null},"W":{"m":580,"r":null}},"2021":{"L":{"m":602,"r":null},"W":{"m":619,"r":null}}}},{"n":"湘潭大学","c":"10530","t":["双一流"],"y":{"2025":{"P":{"m":589,"r":59240},"H":{"m":595,"r":7436}},"2024":{"L":{"m":556,"r":65558},"W":{"m":564,"r":8193}},"2023":{"L":{"m":585,"r":null},"W":{"m":588,"r":null}},"2022":{"L":{"m":568,"r":null},"W":{"m":566,"r":null}},"2021":{"L":{"m":585,"r":null},"W":{"m":600,"r":null}}}},{"n":"深圳大学","c":"10590","t":[],"y":{"2025":{"P":{"m":637,"r":14500},"H":{"m":614,"r":3480}},"2024":{"L":{"m":613,"r":15913},"W":{"m":586,"r":3651}},"2023":{"L":{"m":610,"r":null},"W":{"m":606,"r":null}},"2022":{"L":{"m":596,"r":null},"W":{"m":580,"r":null}},"2021":{"L":{"m":615,"r":null},"W":{"m":619,"r":null}}}},{"n":"广西大学","c":"10593","t":["211","双一流"],"y":{"2025":{"P":{"m":608,"r":37473},"H":{"m":602,"r":5707}},"2024":{"L":{"m":578,"r":41509},"W":{"m":564,"r":8193}},"2023":{"L":{"m":553,"r":null},"W":{"m":597,"r":null}},"2022":{"L":{"m":516,"r":null},"W":{"m":571,"r":null}},"2021":{"L":{"m":584,"r":null},"W":{"m":608,"r":null}}}},{"n":"华南农业大学","c":"10564","t":["双一流"],"y":{"2025":{"P":{"m":593,"r":54059}},"2024":{"L":{"m":548,"r":75686}},"2023":{"L":{"m":571,"r":null}},"2022":{"L":{"m":561,"r":null}},"2021":{"L":{"m":573,"r":null},"W":{"m":594,"r":null}}}},{"n":"海南大学","c":"10589","t":["211","双一流"],"y":{"2025":{"P":{"m":591,"r":56625},"H":{"m":592,"r":8282}},"2024":{"L":{"m":550,"r":73108},"W":{"m":565,"r":7940}},"2023":{"L":{"m":574,"r":null},"W":{"m":589,"r":null}},"2022":{"L":{"m":538,"r":null},"W":{"m":549,"r":null}},"2021":{"L":{"m":591,"r":null},"W":{"m":609,"r":null}}}},{"n":"四川农业大学","c":"10626","t":["211","双一流"],"y":{"2025":{"P":{"m":565,"r":93269}},"2024":{"L":{"m":580,"r":39605}},"2023":{"L":{"m":539,"r":null}},"2022":{"L":{"m":548,"r":null}},"2021":{"L":{"m":589,"r":null}}}},{"n":"西南财经大学","c":"10651","t":["211","双一流"],"y":{"2025":{"P":{"m":627,"r":20939},"H":{"m":617,"r":3030}},"2024":{"L":{"m":603,"r":21656},"W":{"m":573,"r":6088}},"2023":{"L":{"m":590,"r":null},"W":{"m":618,"r":null}},"2022":{"L":{"m":593,"r":null},"W":{"m":590,"r":null}},"2021":{"L":{"m":622,"r":null},"W":{"m":627,"r":null}}}},{"n":"西南政法大学","c":"10652","t":[],"y":{"2025":{"P":{"m":616,"r":29930},"H":{"m":615,"r":3337}},"2024":{"L":{"m":594,"r":27919},"W":{"m":591,"r":2990}},"2023":{"L":{"m":606,"r":null},"W":{"m":619,"r":null}},"2022":{"L":{"m":594,"r":null},"W":{"m":584,"r":null}},"2021":{"L":{"m":612,"r":null},"W":{"m":623,"r":null}}}},{"n":"西南交通大学","c":"10613","t":["211","双一流"],"y":{"2025":{"P":{"m":627,"r":20939},"H":{"m":609,"r":4353}},"2024":{"L":{"m":569,"r":50642}},"2023":{"L":{"m":605,"r":null},"W":{"m":590,"r":null}},"2022":{"L":{"m":594,"r":null},"W":{"m":579,"r":null}},"2021":{"L":{"m":615,"r":null},"W":{"m":619,"r":null}}}},{"n":"西南大学","c":"10635","t":["211","双一流"],"y":{"2025":{"P":{"m":597,"r":49305},"H":{"m":596,"r":7190}},"2024":{"L":{"m":592,"r":29369},"W":{"m":578,"r":5068}},"2023":{"L":{"m":598,"r":null},"W":{"m":611,"r":null}},"2022":{"L":{"m":588,"r":null},"W":{"m":586,"r":null}},"2021":{"L":{"m":613,"r":null},"W":{"m":624,"r":null}}}},{"n":"贵州大学","c":"10657","t":["211","双一流"],"y":{"2025":{"P":{"m":597,"r":49305},"H":{"m":599,"r":6410}},"2024":{"L":{"m":583,"r":36841},"W":{"m":559,"r":9687}},"2023":{"L":{"m":569,"r":null},"W":{"m":598,"r":null}},"2022":{"L":{"m":531,"r":null},"W":{"m":570,"r":null}},"2021":{"L":{"m":598,"r":null},"W":{"m":608,"r":null}}}},{"n":"西安电子科技大学","c":"10701","t":["211","双一流"],"y":{"2025":{"P":{"m":646,"r":9989},"H":{"m":610,"r":4141}},"2024":{"L":{"m":635,"r":7249},"W":{"m":583,"r":4196}},"2023":{"L":{"m":632,"r":null},"W":{"m":601,"r":null}},"2022":{"L":{"m":617,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":635,"r":null},"W":{"m":612,"r":null}}}},{"n":"西北大学","c":"10697","t":["211","双一流"],"y":{"2025":{"P":{"m":617,"r":28989},"H":{"m":593,"r":7978}},"2024":{"L":{"m":600,"r":23638},"W":{"m":585,"r":3808}},"2023":{"L":{"m":605,"r":null},"W":{"m":608,"r":null}},"2022":{"L":{"m":595,"r":null},"W":{"m":582,"r":null}},"2021":{"L":{"m":615,"r":null},"W":{"m":620,"r":null}}}},{"n":"云南大学","c":"10673","t":["211","双一流"],"y":{"2025":{"P":{"m":585,"r":64425},"H":{"m":600,"r":6178}},"2024":{"L":{"m":597,"r":25762},"W":{"m":574,"r":5879}},"2023":{"L":{"m":579,"r":null},"W":{"m":600,"r":null}},"2022":{"L":{"m":558,"r":null},"W":{"m":570,"r":null}},"2021":{"L":{"m":598,"r":null},"W":{"m":612,"r":null}}}},{"n":"西安外国语大学","c":"10724","t":[],"y":{"2025":{"P":{"m":573,"r":81337},"H":{"m":587,"r":9816}},"2024":{"L":{"m":535,"r":93451},"W":{"m":554,"r":11266}},"2023":{"L":{"m":516,"r":null},"W":{"m":578,"r":null}},"2022":{"L":{"m":551,"r":null},"W":{"m":551,"r":null}},"2021":{"L":{"m":589,"r":null},"W":{"m":604,"r":null}}}},{"n":"长安大学","c":"10710","t":["211","双一流"],"y":{"2025":{"P":{"m":606,"r":39518},"H":{"m":588,"r":9488}},"2024":{"L":{"m":595,"r":27214},"W":{"m":575,"r":5676}},"2023":{"L":{"m":600,"r":null},"W":{"m":605,"r":null}},"2022":{"L":{"m":587,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":603,"r":null},"W":{"m":612,"r":null}}}},{"n":"陕西师范大学","c":"10718","t":["211","双一流"],"y":{"2025":{"P":{"m":600,"r":45887},"H":{"m":591,"r":8585}},"2024":{"L":{"m":597,"r":25762},"W":{"m":581,"r":4526}},"2023":{"L":{"m":589,"r":null},"W":{"m":605,"r":null}},"2022":{"L":{"m":575,"r":null},"W":{"m":579,"r":null}},"2021":{"L":{"m":602,"r":null},"W":{"m":620,"r":null}}}},{"n":"西北政法大学","c":"10726","t":[],"y":{"2025":{"P":{"m":610,"r":35524},"H":{"m":573,"r":15077}},"2024":{"L":{"m":577,"r":42445},"W":{"m":585,"r":3808}},"2023":{"L":{"m":584,"r":null},"W":{"m":610,"r":null}},"2022":{"L":{"m":588,"r":null},"W":{"m":563,"r":null}},"2021":{"L":{"m":586,"r":null},"W":{"m":614,"r":null}}}},{"n":"青海师范大学","c":"10746","t":[],"y":{"2025":{"P":{"m":508,"r":194093},"H":{"m":549,"r":27076}},"2024":{"L":{"m":396,"r":329573},"W":{"m":485,"r":48861}},"2023":{"L":{"m":505,"r":null},"W":{"m":500,"r":null}},"2022":{"L":{"m":495,"r":null},"W":{"m":518,"r":null}},"2021":{"L":{"m":487,"r":null},"W":{"m":517,"r":null}}}},{"n":"宁夏大学","c":"10749","t":["211","双一流"],"y":{"2025":{"P":{"m":596,"r":50521},"H":{"m":582,"r":11561}},"2024":{"L":{"m":580,"r":39605},"W":{"m":574,"r":5879}},"2023":{"L":{"m":574,"r":null},"W":{"m":592,"r":null}},"2022":{"L":{"m":531,"r":null},"W":{"m":566,"r":null}},"2021":{"L":{"m":577,"r":null},"W":{"m":604,"r":null}}}},{"n":"中国石油大学(北京)","c":"11414","t":["211","双一流"],"y":{"2025":{"P":{"m":625,"r":22450},"H":{"m":613,"r":3645}},"2024":{"L":{"m":604,"r":21039},"W":{"m":581,"r":4526}},"2023":{"L":{"m":601,"r":null},"W":{"m":606,"r":null}},"2022":{"L":{"m":584,"r":null},"W":{"m":577,"r":null}},"2021":{"L":{"m":609,"r":null},"W":{"m":610,"r":null}}}},{"n":"首都医科大学","c":"10025","t":[],"y":{"2025":{"P":{"m":617,"r":28989}},"2024":{"L":{"m":599,"r":24309}},"2023":{"L":{"m":612,"r":null}},"2022":{"L":{"m":625,"r":null}},"2021":{"L":{"m":615,"r":null}}}},{"n":"南方医科大学","c":"12121","t":[],"y":{"2025":{"P":{"m":579,"r":72674},"H":{"m":600,"r":6178}},"2024":{"L":{"m":612,"r":16488}},"2023":{"L":{"m":583,"r":null},"W":{"m":583,"r":null}},"2022":{"L":{"m":566,"r":null},"W":{"m":546,"r":null}},"2021":{"L":{"m":566,"r":null},"W":{"m":582,"r":null}}}},{"n":"中国地质大学(北京)","c":"11415","t":["211","双一流"],"y":{"2025":{"P":{"m":618,"r":28088},"H":{"m":611,"r":3972}},"2024":{"L":{"m":592,"r":29369},"W":{"m":582,"r":4356}},"2023":{"L":{"m":597,"r":null},"W":{"m":603,"r":null}},"2022":{"L":{"m":583,"r":null},"W":{"m":564,"r":null}},"2021":{"L":{"m":600,"r":null},"W":{"m":622,"r":null}}}},{"n":"新疆农业大学","c":"10758","t":[],"y":{"2025":{"P":{"m":475,"r":258457},"H":{"m":517,"r":48853}},"2024":{"L":{"m":459,"r":217964},"W":{"m":493,"r":43048}},"2023":{"L":{"m":472,"r":null},"W":{"m":522,"r":null}},"2022":{"L":{"m":467,"r":null},"W":{"m":499,"r":null}},"2021":{"L":{"m":461,"r":null},"W":{"m":521,"r":null}}}},{"n":"新疆大学","c":"10755","t":["211","双一流"],"y":{"2025":{"P":{"m":582,"r":68439},"H":{"m":589,"r":9187}},"2024":{"L":{"m":553,"r":69342}},"2023":{"L":{"m":539,"r":null},"W":{"m":581,"r":null}},"2022":{"L":{"m":512,"r":null},"W":{"m":537,"r":null}},"2021":{"L":{"m":567,"r":null},"W":{"m":594,"r":null}}}},{"n":"郑州大学","c":"10459","t":["211","双一流","省内"],"y":{"2025":{"P":{"m":593,"r":54059},"H":{"m":608,"r":4542}},"2024":{"L":{"m":601,"r":22963},"W":{"m":584,"r":4004}},"2023":{"L":{"m":589,"r":null},"W":{"m":602,"r":null}},"2022":{"L":{"m":579,"r":null},"W":{"m":578,"r":null}},"2021":{"L":{"m":603,"r":null},"W":{"m":613,"r":null}}}},{"n":"河南理工大学","c":"10460","t":["省内"],"y":{"2025":{"P":{"m":528,"r":156750},"H":{"m":482,"r":79353}},"2024":{"L":{"m":526,"r":106610},"W":{"m":530,"r":21051}},"2023":{"L":{"m":536,"r":null},"W":{"m":554,"r":null}},"2022":{"L":{"m":525,"r":null},"W":{"m":533,"r":null}},"2021":{"L":{"m":536,"r":null},"W":{"m":565,"r":null}}}},{"n":"郑州轻工业大学","c":"10462","t":["省内"],"y":{"2025":{"P":{"m":546,"r":124772},"H":{"m":558,"r":22165}},"2024":{"L":{"m":537,"r":90628},"W":{"m":533,"r":19675}},"2023":{"L":{"m":537,"r":null},"W":{"m":553,"r":null}},"2022":{"L":{"m":532,"r":null},"W":{"m":534,"r":null}},"2021":{"L":{"m":541,"r":null},"W":{"m":566,"r":null}}}},{"n":"中原工学院","c":"10465","t":["省内"],"y":{"2025":{"P":{"m":490,"r":229094},"H":{"m":519,"r":47316}},"2024":{"L":{"m":510,"r":131720},"W":{"m":505,"r":35107}},"2023":{"L":{"m":520,"r":null},"W":{"m":549,"r":null}},"2022":{"L":{"m":517,"r":null},"W":{"m":529,"r":null}},"2021":{"L":{"m":526,"r":null},"W":{"m":561,"r":null}}}},{"n":"河南工业大学","c":"10463","t":["省内"],"y":{"2025":{"P":{"m":545,"r":126477},"H":{"m":565,"r":18650}},"2024":{"L":{"m":541,"r":84991},"W":{"m":540,"r":16573}},"2023":{"L":{"m":519,"r":null},"W":{"m":551,"r":null}},"2022":{"L":{"m":530,"r":null},"W":{"m":540,"r":null}},"2021":{"L":{"m":545,"r":null},"W":{"m":573,"r":null}}}},{"n":"河南科技大学","c":"10464","t":["省内"],"y":{"2025":{"P":{"m":518,"r":175267},"H":{"m":561,"r":20619}},"2024":{"L":{"m":537,"r":90628},"W":{"m":533,"r":19675}},"2023":{"L":{"m":535,"r":null},"W":{"m":563,"r":null}},"2022":{"L":{"m":539,"r":null},"W":{"m":543,"r":null}},"2021":{"L":{"m":546,"r":null},"W":{"m":572,"r":null}}}},{"n":"河南农业大学","c":"10466","t":["省内"],"y":{"2025":{"P":{"m":487,"r":234918},"H":{"m":559,"r":21636}},"2024":{"L":{"m":521,"r":114271},"W":{"m":532,"r":20150}},"2023":{"L":{"m":515,"r":null},"W":{"m":555,"r":null}},"2022":{"L":{"m":520,"r":null},"W":{"m":538,"r":null}},"2021":{"L":{"m":527,"r":null},"W":{"m":569,"r":null}}}},{"n":"河南牧业经济学院","c":"10469","t":["省内"],"y":{"2025":{"P":{"m":494,"r":221305},"H":{"m":525,"r":42821}},"2024":{"L":{"m":474,"r":191769},"W":{"m":489,"r":45924}},"2023":{"L":{"m":470,"r":null},"W":{"m":515,"r":null}},"2022":{"L":{"m":476,"r":null},"W":{"m":497,"r":null}},"2021":{"L":{"m":475,"r":null},"W":{"m":522,"r":null}}}},{"n":"河南医药大学","c":"10472","t":["省内"],"y":{"2025":{"P":{"m":491,"r":227136},"H":{"m":549,"r":27076}},"2024":{"L":{"m":511,"r":130195},"W":{"m":521,"r":25688}},"2023":{"L":{"m":538,"r":null},"W":{"m":547,"r":null}},"2022":{"L":{"m":530,"r":null},"W":{"m":527,"r":null}},"2021":{"L":{"m":541,"r":null},"W":{"m":558,"r":null}}}},{"n":"河南师范大学","c":"10476","t":["省内"],"y":{"2025":{"P":{"m":534,"r":145853},"H":{"m":551,"r":25933}},"2024":{"L":{"m":535,"r":93451},"W":{"m":537,"r":17884}},"2023":{"L":{"m":514,"r":null},"W":{"m":566,"r":null}},"2022":{"L":{"m":539,"r":null},"W":{"m":546,"r":null}},"2021":{"L":{"m":553,"r":null},"W":{"m":576,"r":null}}}},{"n":"河南大学","c":"10475","t":["双一流","省内"],"y":{"2025":{"P":{"m":596,"r":50521},"H":{"m":593,"r":7978}},"2024":{"L":{"m":582,"r":37744},"W":{"m":570,"r":6767}},"2023":{"L":{"m":567,"r":null},"W":{"m":590,"r":null}},"2022":{"L":{"m":572,"r":null},"W":{"m":567,"r":null}},"2021":{"L":{"m":586,"r":null},"W":{"m":598,"r":null}}}},{"n":"信阳师范大学","c":"10477","t":["省内"],"y":{"2025":{"P":{"m":520,"r":171586},"H":{"m":519,"r":47316}},"2024":{"L":{"m":522,"r":112738},"W":{"m":534,"r":19197}},"2023":{"L":{"m":539,"r":null},"W":{"m":558,"r":null}},"2022":{"L":{"m":532,"r":null},"W":{"m":535,"r":null}},"2021":{"L":{"m":540,"r":null},"W":{"m":564,"r":null}}}},{"n":"周口师范学院","c":"10478","t":["省内"],"y":{"2025":{"P":{"m":490,"r":229094},"H":{"m":507,"r":56846}},"2024":{"L":{"m":511,"r":130195},"W":{"m":522,"r":25181}},"2023":{"L":{"m":514,"r":null},"W":{"m":547,"r":null}},"2022":{"L":{"m":480,"r":null},"W":{"m":505,"r":null}},"2021":{"L":{"m":477,"r":null},"W":{"m":529,"r":null}}}},{"n":"许昌学院","c":"10480","t":["省内"],"y":{"2025":{"P":{"m":488,"r":232985},"H":{"m":511,"r":53588}},"2024":{"L":{"m":491,"r":162618},"W":{"m":501,"r":37674}},"2023":{"L":{"m":495,"r":null},"W":{"m":525,"r":null}},"2022":{"L":{"m":484,"r":null},"W":{"m":503,"r":null}},"2021":{"L":{"m":482,"r":null},"W":{"m":527,"r":null}}}},{"n":"安阳师范学院","c":"10479","t":["省内"],"y":{"2025":{"P":{"m":485,"r":238824},"H":{"m":510,"r":54420}},"2024":{"L":{"m":507,"r":136483},"W":{"m":524,"r":24082}},"2023":{"L":{"m":520,"r":null},"W":{"m":547,"r":null}},"2022":{"L":{"m":512,"r":null},"W":{"m":512,"r":null}},"2021":{"L":{"m":492,"r":null},"W":{"m":537,"r":null}}}},{"n":"洛阳师范学院","c":"10482","t":["省内"],"y":{"2025":{"P":{"m":502,"r":205818},"H":{"m":513,"r":52074}},"2024":{"L":{"m":524,"r":109654},"W":{"m":534,"r":19197}},"2023":{"L":{"m":535,"r":null},"W":{"m":557,"r":null}},"2022":{"L":{"m":531,"r":null},"W":{"m":535,"r":null}},"2021":{"L":{"m":536,"r":null},"W":{"m":562,"r":null}}}},{"n":"南阳师范学院","c":"10481","t":["省内"],"y":{"2025":{"P":{"m":489,"r":231000},"H":{"m":513,"r":52074}},"2024":{"L":{"m":511,"r":130195},"W":{"m":522,"r":25181}},"2023":{"L":{"m":523,"r":null},"W":{"m":552,"r":null}},"2022":{"L":{"m":525,"r":null},"W":{"m":533,"r":null}},"2021":{"L":{"m":534,"r":null},"W":{"m":564,"r":null}}}},{"n":"商丘师范学院","c":"10483","t":["省内"],"y":{"2025":{"P":{"m":487,"r":234918},"H":{"m":508,"r":56017}},"2024":{"L":{"m":511,"r":130195},"W":{"m":521,"r":25688}},"2023":{"L":{"m":515,"r":null},"W":{"m":547,"r":null}},"2022":{"L":{"m":484,"r":null},"W":{"m":507,"r":null}},"2021":{"L":{"m":485,"r":null},"W":{"m":531,"r":null}}}},{"n":"郑州航空工业管理学院","c":"10485","t":["省内"],"y":{"2025":{"P":{"m":502,"r":205818},"H":{"m":550,"r":26513}},"2024":{"L":{"m":517,"r":120583},"W":{"m":521,"r":25688}},"2023":{"L":{"m":524,"r":null},"W":{"m":552,"r":null}},"2022":{"L":{"m":519,"r":null},"W":{"m":530,"r":null}},"2021":{"L":{"m":525,"r":null},"W":{"m":561,"r":null}}}},{"n":"黄淮学院","c":"10918","t":["省内"],"y":{"2025":{"P":{"m":481,"r":246710},"H":{"m":503,"r":60188}},"2024":{"L":{"m":525,"r":108197},"W":{"m":495,"r":41702}},"2023":{"L":{"m":527,"r":null},"W":{"m":523,"r":null}},"2022":{"L":{"m":517,"r":null},"W":{"m":500,"r":null}},"2021":{"L":{"m":520,"r":null},"W":{"m":524,"r":null}}}},{"n":"河南财经政法大学","c":"10484","t":["省内"],"y":{"2025":{"P":{"m":568,"r":88775},"H":{"m":569,"r":16791}},"2024":{"L":{"m":536,"r":92030},"W":{"m":548,"r":13425}},"2023":{"L":{"m":522,"r":null},"W":{"m":571,"r":null}},"2022":{"L":{"m":547,"r":null},"W":{"m":550,"r":null}},"2021":{"L":{"m":559,"r":null},"W":{"m":583,"r":null}}}},{"n":"郑州工程技术学院","c":"11068","t":["省内"],"y":{"2025":{"P":{"m":492,"r":225208},"H":{"m":517,"r":48853}},"2024":{"L":{"m":458,"r":219683},"W":{"m":484,"r":49586}},"2023":{"L":{"m":482,"r":null},"W":{"m":511,"r":null}},"2022":{"L":{"m":478,"r":null},"W":{"m":493,"r":null}},"2021":{"L":{"m":480,"r":null},"W":{"m":520,"r":null}}}},{"n":"平顶山学院","c":"10919","t":["省内"],"y":{"2025":{"P":{"m":483,"r":242790},"H":{"m":513,"r":52074}},"2024":{"L":{"m":544,"r":80952},"W":{"m":483,"r":50315}},"2023":{"L":{"m":543,"r":null},"W":{"m":519,"r":null}},"2022":{"L":{"m":529,"r":null},"W":{"m":497,"r":null}},"2021":{"L":{"m":531,"r":null},"W":{"m":521,"r":null}}}},{"n":"洛阳理工学院","c":"11070","t":["省内"],"y":{"2025":{"P":{"m":522,"r":167752},"H":{"m":535,"r":35736}},"2024":{"L":{"m":525,"r":108197},"W":{"m":498,"r":39680}},"2023":{"L":{"m":525,"r":null},"W":{"m":526,"r":null}},"2022":{"L":{"m":515,"r":null},"W":{"m":508,"r":null}},"2021":{"L":{"m":518,"r":null},"W":{"m":536,"r":null}}}},{"n":"新乡学院","c":"11071","t":["省内"],"y":{"2025":{"P":{"m":484,"r":240777},"H":{"m":508,"r":56017}},"2024":{"L":{"m":511,"r":130195},"W":{"m":490,"r":45184}},"2023":{"L":{"m":514,"r":null},"W":{"m":519,"r":null}},"2022":{"L":{"m":514,"r":null},"W":{"m":499,"r":null}},"2021":{"L":{"m":522,"r":null},"W":{"m":525,"r":null}}}},{"n":"河南工学院","c":"11329","t":["省内"],"y":{"2025":{"P":{"m":514,"r":182751},"H":{"m":525,"r":42821}},"2024":{"L":{"m":493,"r":159343},"W":{"m":487,"r":47394}},"2023":{"L":{"m":487,"r":null},"W":{"m":513,"r":null}},"2022":{"L":{"m":475,"r":null},"W":{"m":493,"r":null}},"2021":{"L":{"m":472,"r":null},"W":{"m":519,"r":null}}}},{"n":"信阳农林学院","c":"11326","t":["省内"],"y":{"2025":{"P":{"m":484,"r":240777},"H":{"m":515,"r":50447}},"2024":{"L":{"m":463,"r":211008},"W":{"m":486,"r":48153}},"2023":{"L":{"m":471,"r":null},"W":{"m":513,"r":null}},"2022":{"L":{"m":466,"r":null},"W":{"m":493,"r":null}},"2021":{"L":{"m":466,"r":null},"W":{"m":518,"r":null}}}},{"n":"安阳工学院","c":"11330","t":["省内"],"y":{"2025":{"P":{"m":480,"r":248687},"H":{"m":508,"r":56017}},"2024":{"L":{"m":519,"r":117381},"W":{"m":487,"r":47394}},"2023":{"L":{"m":519,"r":null},"W":{"m":515,"r":null}},"2022":{"L":{"m":514,"r":null},"W":{"m":495,"r":null}},"2021":{"L":{"m":518,"r":null},"W":{"m":520,"r":null}}}},{"n":"河南工程学院","c":"11517","t":["省内"],"y":{"2025":{"P":{"m":517,"r":177095},"H":{"m":540,"r":32472}},"2024":{"L":{"m":520,"r":115830},"W":{"m":526,"r":23057}},"2023":{"L":{"m":515,"r":null},"W":{"m":547,"r":null}},"2022":{"L":{"m":488,"r":null},"W":{"m":508,"r":null}},"2021":{"L":{"m":486,"r":null},"W":{"m":537,"r":null}}}},{"n":"河南科技学院","c":"10467","t":["省内"],"y":{"2025":{"P":{"m":530,"r":153170},"H":{"m":546,"r":28812}},"2024":{"L":{"m":526,"r":106610},"W":{"m":524,"r":24082}},"2023":{"L":{"m":526,"r":null},"W":{"m":549,"r":null}},"2022":{"L":{"m":518,"r":null},"W":{"m":528,"r":null}},"2021":{"L":{"m":523,"r":null},"W":{"m":559,"r":null}}}},{"n":"河南警察学院","c":"11788","t":["省内"],"y":{"2025":{"P":{"m":553,"r":112668},"H":{"m":562,"r":20115}},"2024":{"L":{"m":512,"r":128582},"W":{"m":523,"r":24648}},"2023":{"L":{"m":513,"r":null},"W":{"m":545,"r":null}}}},{"n":"南阳理工学院","c":"11653","t":["省内"],"y":{"2025":{"P":{"m":489,"r":231000},"H":{"m":476,"r":85097}},"2024":{"L":{"m":527,"r":105160},"W":{"m":541,"r":16148}},"2023":{"L":{"m":525,"r":null},"W":{"m":559,"r":null}},"2022":{"L":{"m":513,"r":null},"W":{"m":532,"r":null}},"2021":{"L":{"m":535,"r":null},"W":{"m":563,"r":null}}}},{"n":"河南城建学院","c":"11765","t":["省内"],"y":{"2025":{"P":{"m":482,"r":244712},"H":{"m":525,"r":42821}},"2024":{"L":{"m":511,"r":130195}},"2023":{"L":{"m":514,"r":null},"W":{"m":519,"r":null}},"2022":{"L":{"m":515,"r":null},"W":{"m":498,"r":null}},"2021":{"L":{"m":519,"r":null},"W":{"m":523,"r":null}}}},{"n":"河南中医药大学","c":"10471","t":["省内"],"y":{"2025":{"P":{"m":528,"r":156750},"H":{"m":551,"r":25933}},"2024":{"L":{"m":518,"r":118997},"W":{"m":531,"r":20613}},"2023":{"L":{"m":524,"r":null},"W":{"m":554,"r":null}},"2022":{"L":{"m":514,"r":null},"W":{"m":531,"r":null}},"2021":{"L":{"m":529,"r":null},"W":{"m":561,"r":null}}}},{"n":"中国科学院大学","c":"14430","t":["双一流","科研院所"],"y":{"2025":{"P":{"m":685,"r":695}},"2024":{"L":{"m":674,"r":958}},"2023":{"L":{"m":670,"r":null}},"2022":{"L":{"m":659,"r":null}},"2021":{"L":{"m":677,"r":null}}}},{"n":"中国社会科学院大学","c":"14596","t":["科研院所"],"y":{"2025":{"P":{"m":636,"r":15066},"H":{"m":625,"r":2032}},"2024":{"L":{"m":624,"r":10962},"W":{"m":596,"r":2393}},"2023":{"L":{"m":625,"r":null},"W":{"m":623,"r":null}},"2022":{"L":{"m":608,"r":null},"W":{"m":595,"r":null}},"2021":{"L":{"m":641,"r":null},"W":{"m":633,"r":null}}}},{"n":"黄河科技学院","c":"11834","t":["省内"],"y":{"2025":{"P":{"m":455,"r":297074},"H":{"m":479,"r":82229}},"2024":{"L":{"m":517,"r":120583},"W":{"m":457,"r":71460}},"2023":{"L":{"m":514,"r":null},"W":{"m":498,"r":null}},"2022":{"L":{"m":509,"r":null},"W":{"m":474,"r":null}},"2021":{"L":{"m":518,"r":null},"W":{"m":502,"r":null}}}},{"n":"郑州师范学院","c":"12949","t":["省内"],"y":{"2025":{"P":{"m":476,"r":256447},"H":{"m":526,"r":42086}},"2024":{"L":{"m":467,"r":203994},"W":{"m":484,"r":49586}},"2023":{"L":{"m":430,"r":null},"W":{"m":520,"r":null}},"2022":{"L":{"m":498,"r":null},"W":{"m":517,"r":null}},"2021":{"L":{"m":465,"r":null},"W":{"m":545,"r":null}}}},{"n":"北师香港浸会大学","c":"16401","t":["中外合作"],"y":{"2025":{"P":{"m":539,"r":136912},"H":{"m":545,"r":29443}}}},{"n":"国防科技大学","c":"91002","t":["985","211","双一流","军校"],"y":{"2025":{"P":{"m":661,"r":4578}},"2024":{"L":{"m":649,"r":3955}},"2023":{"L":{"m":646,"r":null}},"2022":{"L":{"m":634,"r":null}},"2021":{"L":{"m":650,"r":null}}}},{"n":"河南财政金融学院","c":"11652","t":["省内"],"y":{"2025":{"P":{"m":493,"r":223265},"H":{"m":530,"r":39207}},"2024":{"L":{"m":462,"r":212758},"W":{"m":492,"r":43733}},"2023":{"L":{"m":415,"r":null},"W":{"m":520,"r":null}},"2022":{"L":{"m":483,"r":null},"W":{"m":502,"r":null}},"2021":{"L":{"m":484,"r":null},"W":{"m":532,"r":null}}}},{"n":"华北水利水电大学","c":"10078","t":["省内"],"y":{"2025":{"P":{"m":490,"r":229094},"H":{"m":555,"r":23701}},"2024":{"L":{"m":553,"r":69342},"W":{"m":524,"r":24082}},"2023":{"L":{"m":551,"r":null},"W":{"m":554,"r":null}},"2022":{"L":{"m":541,"r":null},"W":{"m":536,"r":null}},"2021":{"L":{"m":547,"r":null},"W":{"m":568,"r":null}}}},{"n":"石河子大学","c":"10759","t":["211","双一流"],"y":{"2025":{"P":{"m":580,"r":71205},"H":{"m":571,"r":15889}},"2024":{"L":{"m":533,"r":96379},"W":{"m":558,"r":10012}},"2023":{"L":{"m":555,"r":null},"W":{"m":582,"r":null}},"2022":{"L":{"m":551,"r":null},"W":{"m":555,"r":null}},"2021":{"L":{"m":567,"r":null},"W":{"m":588,"r":null}}}},{"n":"北京大学医学部","c":"10001","t":[],"y":{"2025":{"P":{"m":674,"r":1917},"H":{"m":670,"r":88}},"2023":{"L":{"m":683,"r":null}}}}],"lines":[{"year":2026,"newSystem":true,"history":{"special":534,"undergrad":459,"vocational":179},"physics":{"special":513,"undergrad":419,"vocational":179}},{"year":2025,"newSystem":true,"history":{"special":552,"undergrad":471,"vocational":185},"physics":{"special":535,"undergrad":427,"vocational":185}},{"year":2024,"newSystem":false,"arts":{"batch1":521,"batch2":428,"vocational":185},"science":{"batch1":511,"batch2":396,"vocational":185}},{"year":2023,"newSystem":false,"arts":{"batch1":547,"batch2":465,"vocational":185},"science":{"batch1":514,"batch2":409,"vocational":185}},{"year":2022,"newSystem":false,"arts":{"batch1":527,"batch2":445,"vocational":190},"science":{"batch1":509,"batch2":405,"vocational":190}},{"year":2021,"newSystem":false,"arts":{"batch1":558,"batch2":466,"vocational":200},"science":{"batch1":518,"batch2":400,"vocational":200}},{"year":2020,"newSystem":false,"arts":{"batch1":556,"batch2":465,"vocational":180},"science":{"batch1":544,"batch2":418,"vocational":180}},{"year":2019,"newSystem":false,"arts":{"batch1":536,"batch2":447,"vocational":160},"science":{"batch1":502,"batch2":385,"vocational":160}},{"year":2018,"newSystem":false,"arts":{"batch1":547,"batch2":436,"vocational":200},"science":{"batch1":499,"batch2":374,"vocational":200}},{"year":2017,"newSystem":false,"arts":{"batch1":516,"batch2":389,"vocational":180},"science":{"batch1":484,"batch2":342,"vocational":180}},{"year":2016,"newSystem":false,"arts":{"batch1":517,"batch2":458,"batch3":393,"vocational":180},"science":{"batch1":523,"batch2":447,"batch3":370,"vocational":180}}]};
+
+  function byId(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function fmt(n) { return n == null ? null : Number(n).toLocaleString('en-US'); }
+  function signed(d) { return d > 0 ? '+' + d : (d < 0 ? '\u2212' + Math.abs(d) : '持平'); }
+
+  var LINES = DATA.lines.slice().sort(function (a, b) { return a.year - b.year; });
+  var YEARS = LINES.map(function (l) { return l.year; });
+
+  function lineOf(year) {
+    for (var i = 0; i < LINES.length; i++) if (LINES[i].year === year) return LINES[i];
+    return null;
+  }
+  function isNewEra(year) { return year >= 2025; }
+  function trackName(track, year) {
+    if (isNewEra(year)) return track === 'physics' ? '物理类' : '历史类';
+    return track === 'physics' ? '理科' : '文科';
+  }
+  function tiersOf(year, track) {
+    var l = lineOf(year);
+    if (!l) return null;
+    var sub = l.newSystem ? (track === 'physics' ? l.physics : l.history)
+                          : (track === 'physics' ? l.science : l.arts);
+    return {
+      t1: sub.batch1 != null ? sub.batch1 : sub.special,
+      t2: sub.batch2 != null ? sub.batch2 : sub.undergrad,
+      voc: sub.vocational,
+      t1Name: l.newSystem ? '特殊类型线' : '本科一批线',
+      t2Name: l.newSystem ? '本科线' : '本科二批线'
+    };
+  }
+
+  /* ── quick query ── */
+  var quick = { year: 2026, track: 'physics' };
+  function renderQuick() {
+    var t = tiersOf(quick.year, quick.track);
+    if (!t) return;
+    var prev = tiersOf(quick.year - 1, quick.track);
+    byId('qk1').textContent = t.t1Name;
+    byId('qk2').textContent = t.t2Name;
+    byId('qk3').textContent = '专科线';
+    byId('qv1').textContent = t.t1;
+    byId('qv2').textContent = t.t2;
+    byId('qv3').textContent = t.voc;
+    byId('qd1').textContent = prev ? '较上年 ' + signed(t.t1 - prev.t1) : '首年数据';
+    byId('qd2').textContent = prev ? '较上年 ' + signed(t.t2 - prev.t2) : '首年数据';
+    byId('qd3').textContent = prev ? '较上年 ' + signed(t.voc - prev.voc) : '首年数据';
+    byId('quick-badge').textContent = quick.year + ' · ' + trackName(quick.track, quick.year);
+    byId('quick-note').textContent = isNewEra(quick.year)
+      ? '2025 年起河南实行新高考：本科一批、二批合并为本科批，此表显示特殊类型线与本科线。'
+      : '老高考（文理分科）批次线；2025 年起切换为新高考，本科一批线对应特殊类型线。';
+  }
+
+  /* ── chart ── */
+  var chartState = { track: 'physics' };
+  var chartGeom = null;
+  var PAD = { top: 30, right: 54, bottom: 30, left: 46 };
+
+  function seriesData(track) {
+    var s1 = [], s2 = [];
+    LINES.forEach(function (l) {
+      var t = tiersOf(l.year, track);
+      s1.push({ v: t.t1 });
+      s2.push({ v: t.t2 });
+    });
+    return [
+      { vals: s1, line: 'series-1', dot: 'dot-1', end: 'end-1', short: null },
+      { vals: s2, line: 'series-2', dot: 'dot-2', end: 'end-2', short: null }
+    ];
+  }
+  function niceTicks(min, max) {
+    var steps = [10, 20, 40, 50, 100];
+    for (var i = 0; i < steps.length; i++) {
+      var s = steps[i];
+      var start = Math.floor(min / s) * s, end = Math.ceil(max / s) * s;
+      if ((end - start) / s <= 6) return { start: start, end: end, step: s };
+    }
+    return { start: Math.floor(min / 100) * 100, end: Math.ceil(max / 100) * 100, step: 100 };
+  }
+  function drawChart() {
+    var wrap = byId('chart-wrap'), svg = byId('chart');
+    if (!wrap || !svg) return;
+    var w = Math.max(300, Math.round(wrap.clientWidth));
+    var h = Math.max(238, Math.min(330, Math.round(w * 0.38)));
+    var pw = w - PAD.left - PAD.right, ph = h - PAD.top - PAD.bottom;
+    var series = seriesData(chartState.track);
+    var all = series[0].vals.concat(series[1].vals).map(function (p) { return p.v; });
+    var ticks = niceTicks(Math.min.apply(null, all), Math.max.apply(null, all));
+    function X(i) { return PAD.left + i * (pw / (LINES.length - 1)); }
+    function Y(v) { return PAD.top + ph - (v - ticks.start) / (ticks.end - ticks.start) * ph; }
+    var parts = [], v, yy, i;
+    for (v = ticks.start; v <= ticks.end; v += ticks.step) {
+      yy = Y(v);
+      parts.push('<line class="grid-line" x1="' + PAD.left + '" y1="' + yy.toFixed(1) + '" x2="' + (w - PAD.right) + '" y2="' + yy.toFixed(1) + '"/>');
+      parts.push('<text class="axis-y" x="' + (PAD.left - 8) + '" y="' + (yy + 3.5).toFixed(1) + '" text-anchor="end">' + v + '</text>');
+    }
+    var labelStep = (pw / (LINES.length - 1)) < 34 ? 2 : 1;
+    for (i = 0; i < LINES.length; i++) {
+      if (i % labelStep !== 0 && i !== LINES.length - 1) continue;
+      parts.push('<text class="axis-x" x="' + X(i).toFixed(1) + '" y="' + (h - 9) + '" text-anchor="middle">' + LINES[i].year + '</text>');
+    }
+    var i25 = YEARS.indexOf(2025);
+    if (i25 >= 0) {
+      var x25 = X(i25);
+      parts.push('<line class="era-line" x1="' + x25.toFixed(1) + '" y1="' + (PAD.top - 8) + '" x2="' + x25.toFixed(1) + '" y2="' + (PAD.top + ph) + '"/>');
+      parts.push('<text class="era-label" x="' + (x25 + 5).toFixed(1) + '" y="' + (PAD.top - 13) + '">2025 新高考</text>');
+    }
+    series.forEach(function (s) {
+      var d = '';
+      for (var k = 0; k < s.vals.length; k++) {
+        d += (k === 0 ? 'M' : 'L') + X(k).toFixed(1) + ' ' + Y(s.vals[k].v).toFixed(1) + ' ';
+      }
+      parts.push('<path class="chart-line ' + s.line + '" d="' + d.trim() + '"/>');
+      for (var k2 = 0; k2 < s.vals.length; k2++) {
+        parts.push('<circle class="' + s.dot + '" cx="' + X(k2).toFixed(1) + '" cy="' + Y(s.vals[k2].v).toFixed(1) + '" r="2.6"/>');
+      }
+      var li = s.vals.length - 1;
+      parts.push('<text class="end-label ' + s.end + '" x="' + (X(li) + 9).toFixed(1) + '" y="' + (Y(s.vals[li].v) + 4).toFixed(1) + '">' + s.vals[li].v + '</text>');
+    });
+    parts.push('<g id="hover-layer"></g>');
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    svg.setAttribute('aria-label', '河南省' + (chartState.track === 'physics' ? '物理类' : '历史类') + '本科一批与本科二批分数线 2016 至 2026 年趋势折线图，逐年数值见下方数据表');
+    svg.innerHTML = parts.join('');
+    chartGeom = { w: w, h: h, ticks: ticks, series: series, X: X, Y: Y };
+  }
+  function hoverAt(clientX, show) {
+    var svg = byId('chart'), layer = byId('hover-layer');
+    if (!svg || !layer || !chartGeom) return;
+    if (!show) { layer.innerHTML = ''; return; }
+    var g = chartGeom;
+    var rect = svg.getBoundingClientRect();
+    if (!rect.width) return;
+    var mx = (clientX - rect.left) * (g.w / rect.width);
+    var stepPx = (g.w - PAD.left - PAD.right) / (LINES.length - 1);
+    var idx = Math.round((mx - PAD.left) / stepPx);
+    if (idx < 0) idx = 0;
+    if (idx > LINES.length - 1) idx = LINES.length - 1;
+    var x = g.X(idx), l = LINES[idx];
+    var isNew = isNewEra(l.year);
+    var short = isNew ? ['特招', '本科'] : ['一本', '二本'];
+    var tipW = 118, tipH = 74;
+    var bx = x + 14;
+    if (bx + tipW > g.w - 6) bx = x - 14 - tipW;
+    if (bx < 4) bx = x + 14;
+    var by = PAD.top + 2;
+    var html = [];
+    html.push('<line class="hover-line" x1="' + x.toFixed(1) + '" y1="' + PAD.top + '" x2="' + x.toFixed(1) + '" y2="' + (g.h - PAD.bottom) + '"/>');
+    g.series.forEach(function (s, si) {
+      html.push('<circle class="hover-dot d' + (si + 1) + '" cx="' + x.toFixed(1) + '" cy="' + g.Y(s.vals[idx].v).toFixed(1) + '" r="4.2"/>');
+    });
+    html.push('<rect class="tip-bg" x="' + bx.toFixed(1) + '" y="' + by + '" width="' + tipW + '" height="' + tipH + '" rx="8"/>');
+    html.push('<text class="tip-head" x="' + (bx + 11).toFixed(1) + '" y="' + (by + 19) + '">' + l.year + ' · ' + trackName(chartState.track, l.year) + '</text>');
+    html.push('<line class="tip-rule" x1="' + (bx + 11).toFixed(1) + '" y1="' + (by + 27) + '" x2="' + (bx + tipW - 11).toFixed(1) + '" y2="' + (by + 27) + '"/>');
+    g.series.forEach(function (s, si) {
+      var ry = by + 45 + si * 17;
+      html.push('<text class="tip-row" x="' + (bx + 11).toFixed(1) + '" y="' + ry + '"><tspan class="tip-k">' + short[si] + '</tspan><tspan class="tip-v v' + (si + 1) + '" dx="7">' + s.vals[idx].v + '</tspan></text>');
+    });
+    layer.innerHTML = html.join('');
+  }
+
+  /* ── lines table ── */
+  function renderLinesTable() {
+    var rows = [];
+    LINES.slice().reverse().forEach(function (l) {
+      function cells(track) {
+        var t = tiersOf(l.year, track);
+        return '<td class="num">' + t.t1 + '</td><td class="num">' + t.t2 + '</td><td class="num">' + t.voc + '</td>';
+      }
+      rows.push('<tr><th scope="row" class="row-year">' + l.year + '</th>' + cells('physics') + cells('history') + '</tr>');
+    });
+    byId('lines-body').innerHTML = rows.join('');
+  }
+
+  /* ── schools explorer ── */
+  var schools = { track: 'physics', q: '', sortKey: 'n', sortDir: 1 };
+  var SORT_YEARS = ['2025', '2024', '2023', '2022', '2021'];
+  function valsOf(u, track) {
+    var map = track === 'physics'
+      ? { '2025': 'P', '2024': 'L', '2023': 'L', '2022': 'L', '2021': 'L' }
+      : { '2025': 'H', '2024': 'W', '2023': 'W', '2022': 'W', '2021': 'W' };
+    var v = {};
+    SORT_YEARS.forEach(function (yr) {
+      var cell = u.y && u.y[yr] ? u.y[yr][map[yr]] : null;
+      v['m' + yr] = cell ? cell.m : null;
+      if (yr === '2025' || yr === '2024') v['r' + yr] = cell && cell.r != null ? cell.r : null;
+    });
+    return v;
+  }
+  function rowHtml(r) {
+    var u = r.u, v = r.v;
+    var tags = u.t && u.t.length
+      ? '<span class="tags">' + u.t.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</span>'
+      : '';
+    function m(k) { var x = v[k]; return '<td class="num">' + (x == null ? '<span class="na">—</span>' : x) + '</td>'; }
+    function rk(k) { var x = v[k]; return '<td class="num rank">' + (x == null ? '<span class="na">—</span>' : fmt(x)) + '</td>'; }
+    return '<tr><td class="cell-name"><span class="u-name">' + esc(u.n) + '</span><span class="u-code">' + esc(u.c) + '</span>' + tags + '</td>'
+      + m('m2025') + rk('r2025') + m('m2024') + rk('r2024') + m('m2023') + m('m2022') + m('m2021') + '</tr>';
+  }
+  function updateSortUI() {
+    var ths = document.querySelectorAll('#univ-table thead th');
+    Array.prototype.forEach.call(ths, function (th) {
+      var key = th.getAttribute('data-key');
+      if (!key) return;
+      var active = key === schools.sortKey;
+      th.setAttribute('aria-sort', active ? (schools.sortDir > 0 ? 'ascending' : 'descending') : 'none');
+      var mk = th.querySelector('.mark');
+      if (mk) mk.textContent = active ? (schools.sortDir > 0 ? '\u2191' : '\u2193') : '';
+    });
+  }
+  function renderSchools() {
+    var rows = DATA.univ.map(function (u) { return { u: u, v: valsOf(u, schools.track) }; });
+    var q = schools.q.trim().toLowerCase();
+    if (q) {
+      rows = rows.filter(function (r) {
+        return r.u.n.toLowerCase().indexOf(q) !== -1 || String(r.u.c).indexOf(q) !== -1;
+      });
+    }
+    var key = schools.sortKey, dir = schools.sortDir;
+    rows.sort(function (a, b) {
+      if (key === 'n') return a.u.n.localeCompare(b.u.n, 'zh-Hans-CN') * dir;
+      var av = a.v[key], bv = b.v[key];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      return (av - bv) * dir;
+    });
+    var html = rows.map(rowHtml).join('');
+    if (!rows.length) {
+      html = '<tr class="empty-row"><td colspan="8">没有匹配的院校 — 换个关键词试试（支持院校名称或 5 位代号）。</td></tr>';
+    }
+    byId('univ-body').innerHTML = html;
+    var total = DATA.univ.length;
+    byId('univ-count').textContent = q ? ('找到 ' + rows.length + ' 所院校 · 共 ' + total + ' 所') : ('共 ' + total + ' 所院校');
+    byId('clear-filters').hidden = !q;
+    byId('track-chip').textContent = '科类：' + (schools.track === 'physics' ? '物理类（2021–2024 为理科数据）' : '历史类（2021–2024 为文科数据）');
+    updateSortUI();
+  }
+
+  /* ── wiring ── */
+  function segWire(id, onChange) {
+    var group = byId(id);
+    if (!group) return;
+    group.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.seg-btn') : null;
+      if (!btn || btn.classList.contains('is-active')) return;
+      Array.prototype.forEach.call(group.querySelectorAll('.seg-btn'), function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      onChange(btn.getAttribute('data-track'));
+    });
+  }
+
+  var metaColor = document.querySelector('meta[name="theme-color"]');
+  if (metaColor) {
+    var bg = getComputedStyle(document.documentElement).getPropertyValue('--seed-bg').trim();
+    if (bg) metaColor.setAttribute('content', bg);
+  }
+
+  byId('quick-year').addEventListener('change', function () {
+    quick.year = Number(this.value);
+    renderQuick();
+  });
+  segWire('seg-quick', function (t) { quick.track = t; renderQuick(); });
+  segWire('seg-chart', function (t) { chartState.track = t; drawChart(); });
+  segWire('seg-schools', function (t) { schools.track = t; renderSchools(); });
+
+  byId('q').addEventListener('input', function () {
+    schools.q = this.value;
+    renderSchools();
+  });
+  byId('clear-filters').addEventListener('click', function () {
+    byId('q').value = '';
+    schools.q = '';
+    renderSchools();
+    byId('q').focus();
+  });
+  document.getElementById('univ-table').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.sort-btn') : null;
+    if (!btn) return;
+    var key = btn.getAttribute('data-sort');
+    if (schools.sortKey === key) {
+      schools.sortDir = -schools.sortDir;
+    } else {
+      schools.sortKey = key;
+      schools.sortDir = key === 'n' ? 1 : -1;
+    }
+    renderSchools();
+  });
+
+  var chartSvg = byId('chart');
+  chartSvg.addEventListener('pointermove', function (e) { hoverAt(e.clientX, true); });
+  chartSvg.addEventListener('pointerleave', function () { hoverAt(0, false); });
+
+  function relayout() { drawChart(); }
+  if (window.ResizeObserver) {
+    new ResizeObserver(function () { relayout(); }).observe(byId('chart-wrap'));
+  } else {
+    window.addEventListener('resize', relayout);
+  }
+
+  quick.year = Number(byId('quick-year').value);
+  renderQuick();
+  renderLinesTable();
+  renderSchools();
+  drawChart();
+})();
+</script>
+</body>
+</html>
